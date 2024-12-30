@@ -41,6 +41,7 @@ public class LoginPage {
     private JPasswordField loginPasswordField, signupPasswordField, resetPasswordField;
     private JButton loginButton, signupButton, switchToSignupButton, switchToLoginButton, resetPasswordButton, backToLoginButton;
     private List<User> users;
+    
 
     public LoginPage() {
         users = loadUsers(); // Load users from file
@@ -334,8 +335,7 @@ public class LoginPage {
         if (newUser instanceof AdminUser) {
             new AdminHomepageUI((AdminUser)newUser);
         } else {
-            new PreferencesUI((RegularUser)newUser);
-            new ReaderHomepageUI(newUser);
+            new PreferencesUI((RegularUser)newUser,new ReaderHomepageUI(newUser));
         }
         frame.dispose(); // Close the signup frame
     }

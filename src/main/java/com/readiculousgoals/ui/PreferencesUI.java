@@ -11,75 +11,73 @@ import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
 public class PreferencesUI {
-    public PreferencesUI(RegularUser user) {
+    // Add a ReaderHomepageUI reference to update it after preferences change
+    private ReaderHomepageUI readerHomepage;
+
+    public PreferencesUI(RegularUser user, ReaderHomepageUI readerHomepageUI) {
         JFrame frame = new JFrame("Set Your Preferences");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(400, 600);
         JLabel welcomeLabel = new JLabel("Select your favorite genres:");
         welcomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        // Create an array of genres (using Genre objects directly)
+    
         Genre[] genres = {
             new Romance(), new Crime(), new Mystery(), new SciFi(), new Drama(),
             new Horror(), new Fantasy(), new Classics(), new Thriller(),
             new Science(), new Religion(), new Biography(), new Educational(), new History()
         };
-        // Panel for checkboxes
+    
         JPanel checkBoxPanel = new JPanel();
         checkBoxPanel.setLayout(new GridLayout(genres.length, 1));
-        // Create checkboxes for genres
+    
         JCheckBox[] genreCheckBoxes = new JCheckBox[genres.length];
         for (int i = 0; i < genres.length; i++) {
             genreCheckBoxes[i] = new JCheckBox(genres[i].getName());
-            genreCheckBoxes[i].setSelected(user.hasPreference(genres[i])); // Pre-select if already in preferences
+            genreCheckBoxes[i].setSelected(user.hasPreference(genres[i]));
             checkBoxPanel.add(genreCheckBoxes[i]);
         }
-
-        // Save Button
+    
         JButton saveButton = new JButton("Save Preferences");
         saveButton.setFont(new Font("Arial", Font.BOLD, 14));
         saveButton.setBackground(Color.GREEN);
         saveButton.setForeground(Color.WHITE);
-
-        // Action Listener for Save Button
+    
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Update user's preferences based on selected checkboxes
                 for (int i = 0; i < genres.length; i++) {
                     if (genreCheckBoxes[i].isSelected()) {
-                        user.addPreference(genres[i]); // Add genre object (Set prevents duplicates)
+                        user.addPreference(genres[i]);
                     } else {
-                        user.removePreference(genres[i]); // Remove genre object
+                        user.removePreference(genres[i]);
                     }
                 }
-
-                // Show confirmation message
+    
                 JOptionPane.showMessageDialog(frame, "Your preferences have been saved!");
-
-                // Display the updated preferences in the console (optional)
+    
+                // Print the updated preferences
                 System.out.println("Updated Preferences for " + user.getFullName() + ":");
                 for (Genre preference : user.getPreferences()) {
                     System.out.println("- " + preference.getName());
                 }
-
-                // Serialize the updated user object to users.dat
+    
                 saveUserToFile(user);
-
-                // Close the frame
+    
+                // Notify ReaderHomepageUI to refresh itself
+                readerHomepageUI.refreshHomepage();
+    
                 frame.dispose();
             }
         });
-
-        // Add components to the frame
+    
         frame.setLayout(new BorderLayout());
         frame.add(welcomeLabel, BorderLayout.NORTH);
         frame.add(new JScrollPane(checkBoxPanel), BorderLayout.CENTER);
         frame.add(saveButton, BorderLayout.SOUTH);
-
-        // Make the frame visible
         frame.setVisible(true);
     }
+
     private void saveUserToFile(RegularUser user) {
         File file = new File("src/main/java/com/readiculousgoals/data/users.dat");
 
