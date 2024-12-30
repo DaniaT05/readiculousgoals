@@ -318,7 +318,7 @@ public class LoginPage {
             newUser = new AdminUser(fullName, age, username, email, password, joinDate); 
             users.add(newUser);
         } else {
-            newUser = new RegularUser(fullName, age, username, email, password, joinDate);
+            newUser = new RegularUser(fullName, age, username, email, password, joinDate, new ArrayList<>());
             users.add(newUser);
         }
         saveUsers();

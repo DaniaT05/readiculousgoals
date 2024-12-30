@@ -5,9 +5,7 @@ class Book implements Serializable {
     private String author;
     private String genre;
     private String ageRating;
-    private String status;
     private int pageCount;
-    private int pagesRead;
     private byte[] pdfContent; // To store PDF file as bytes
     private byte[] coverImage; // To store image file as bytes
     public static byte[] fileToByteArray(File file) throws IOException {
@@ -24,6 +22,8 @@ class Book implements Serializable {
         this.ageRating = ageRating;
         this.pdfContent = pdfContent;
         this.coverImage = coverImage;
+        this.pageCount = pageCount;
+
     }
     
     @Override
@@ -34,19 +34,25 @@ class Book implements Serializable {
                 ", genre='" + genre + '\n' +
                 ", ageRating='" + ageRating + '\n';
     }
+    public String getTitle() {
+        return title;
+    }
+    public String getAuthor() {
+        return author;
+    }
     public byte[] getPdfContent() {
         return pdfContent;
     }
     public byte[] getCoverImage() {
         return coverImage;
     }
-    public String getStatus() {
-        return status;
-    }
     public String getAgeRating() {
         return ageRating;
     }
     public String getGenre() {
         return genre;
+    }
+    public int getPageCount() {
+        return pageCount;
     }
 }

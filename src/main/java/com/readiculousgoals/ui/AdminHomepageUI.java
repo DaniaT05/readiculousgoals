@@ -5,12 +5,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
+import java.io.*;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import java.awt.image.*;
-import java.io.FileInputStream;
-import java.io.IOException;
 
 public class AdminHomepageUI {
     private AdminUser adminUser;
@@ -24,9 +22,11 @@ public class AdminHomepageUI {
 
         // Buttons
         JButton addBooksButton = new JButton("Add Books");
+        JButton viewBooksButton = new JButton("View Books");
 
         // Button bounds
         addBooksButton.setBounds(120, 30, 150, 30);
+        viewBooksButton.setBounds(120, 70, 150, 30);
 
         // Action listener for "Add Books"
         addBooksButton.addActionListener(new ActionListener() {
@@ -133,6 +133,9 @@ public class AdminHomepageUI {
                         AdminBook adminBook = new AdminBook(title, author, genre, ageRating, pageCount, pdfContent, coverImageContent);
                         JOptionPane.showMessageDialog(addBookDialog, "Book added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
 
+                        // Save to books.dat
+                        saveBookToFile(adminBook);
+
                         // Close the dialog
                         addBookDialog.dispose();
                     }
@@ -162,40 +165,89 @@ public class AdminHomepageUI {
             }
         });
 
-        // Add button to the frame
-        frame.add(addBooksButton);
+        // Action listener for "View Books"
+        viewBooksButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // View books in a dialog
+                JDialog viewBooksDialog = new JDialog(frame, "View Books", true);
+                viewBooksDialog.setSize(400, 500);
+                viewBooksDialog.setLayout(new BorderLayout());
 
-        // Frame visibility
+                JTextArea booksTextArea = new JTextArea();
+                booksTextArea.setEditable(false);
+
+                // Load books from books.dat and display in the text area
+                File booksFile = new File("src/main/java/com/readiculousgoals/data/books.dat");
+                if (booksFile.exists()) {
+                    try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(booksFile))) {
+                        while (true) {
+                            AdminBook book = (AdminBook) ois.readObject();
+                            booksTextArea.append("Title: " + book.getTitle() + "\n");
+                            booksTextArea.append("Author: " + book.getAuthor() + "\n");
+                            booksTextArea.append("Genre: " + book.getGenre() + "\n");
+                            booksTextArea.append("Age Rating: " + book.getAgeRating() + "\n");
+                            booksTextArea.append("Page Count: " + book.getPageCount() + "\n");
+                            booksTextArea.append("--------------------------\n");
+                        }
+                    } catch (EOFException eofe) {
+                        // End of file reached, good
+                    } catch (IOException | ClassNotFoundException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+
+                JScrollPane scrollPane = new JScrollPane(booksTextArea);
+                viewBooksDialog.add(scrollPane, BorderLayout.CENTER);
+                viewBooksDialog.setVisible(true);
+            }
+        });
+
+        // Add buttons to the frame
+        frame.add(addBooksButton);
+        frame.add(viewBooksButton);
+
+        // Set frame visibility
         frame.setVisible(true);
     }
 
-    // Method to get the page count of a PDF file
-    private int getPdfPageCount(File pdfFile) throws IOException {
-        try (PDDocument document = PDDocument.load(pdfFile)) {
+    // Save the book to the file
+    private void saveBookToFile(AdminBook book) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("src/main/java/com/readiculousgoals/data/books.dat", true))) {
+            oos.writeObject(book);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Utility method to extract PDF page count
+    private int getPdfPageCount(File file) throws IOException {
+        try (PDDocument document = PDDocument.load(file)) {
             return document.getNumberOfPages();
         }
     }
 
-    // Method to get file bytes (for PDF and cover image)
-    private byte[] getFileBytes(String filePath) {
-        try {
-            File file = new File(filePath);
-            byte[] fileBytes = new byte[(int) file.length()];
-            try (FileInputStream fileInputStream = new FileInputStream(file)) {
-                fileInputStream.read(fileBytes);
-            }
-            return fileBytes;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new byte[0];
+    // Utility method to extract cover image from PDF
+    private Image extractCoverFromPDF(String pdfFilePath, int pageNum) throws IOException {
+        try (PDDocument document = PDDocument.load(new File(pdfFilePath))) {
+            PDFRenderer pdfRenderer = new PDFRenderer(document);
+            BufferedImage bufferedImage = pdfRenderer.renderImage(pageNum);
+            return bufferedImage;
         }
     }
 
-    // Extract cover image from a PDF file
-    private static Image extractCoverFromPDF(String pdfFilePath, int pageNumber) throws Exception {
-        try (PDDocument document = PDDocument.load(new File(pdfFilePath))) {
-            PDFRenderer pdfRenderer = new PDFRenderer(document);
-            return pdfRenderer.renderImageWithDPI(pageNumber - 1, 300); // Render at 300 DPI
+    // Utility method to convert file to bytes
+    private byte[] getFileBytes(String filePath) {
+        try {
+            File file = new File(filePath);
+            byte[] bytes = new byte[(int) file.length()];
+            try (FileInputStream fis = new FileInputStream(file)) {
+                fis.read(bytes);
+            }
+            return bytes;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

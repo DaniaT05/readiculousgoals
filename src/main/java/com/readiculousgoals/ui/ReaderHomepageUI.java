@@ -1,4 +1,5 @@
 package com.readiculousgoals.ui;
+
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.*;
@@ -11,9 +12,9 @@ public class ReaderHomepageUI extends JFrame {
     private JPanel leftPanel;
 
     public ReaderHomepageUI(User newUser) {
-        RegularUser user = (RegularUser)newUser;
-        this.user = user; 
-        
+        RegularUser user = (RegularUser) newUser;
+        this.user = user;
+
         // Frame settings
         setTitle("Reader Homepage - Welcome, " + user.getFullName());
         setSize(800, 600);
@@ -27,14 +28,15 @@ public class ReaderHomepageUI extends JFrame {
         leftPanel.setVisible(false);
 
         // Left Panel content using GridLayout
-        leftPanel.setLayout(new GridLayout(13, 1, 0, 0)); 
-        
+        leftPanel.setLayout(new GridLayout(13, 1, 0, 0));
+
         // Add buttons with hover and click effects
         JButton profileButton = createButton("Profile");
         profileButton.addActionListener(e -> openUserProfile());
         leftPanel.add(profileButton);
 
         JButton preferencesButton = createButton("Preferences");
+        preferencesButton.addActionListener(e -> openPreferencesUI()); // Action listener for Preferences button
         leftPanel.add(preferencesButton);
 
         JButton readingGoalsButton = createButton("Reading Goals");
@@ -48,7 +50,7 @@ public class ReaderHomepageUI extends JFrame {
 
         JButton logoutButton = createButton("Logout");
         leftPanel.add(logoutButton);
-        
+
         // Add the left panel to the frame
         add(leftPanel, BorderLayout.WEST);
 
@@ -125,5 +127,10 @@ public class ReaderHomepageUI extends JFrame {
 
     private void openUserProfile() {
         new UserProfile(user); // Pass user details to the profile page
+    }
+
+    // Method to open Preferences UI
+    private void openPreferencesUI() {
+        new PreferencesUI(user); // Pass the RegularUser to PreferencesUI
     }
 }
