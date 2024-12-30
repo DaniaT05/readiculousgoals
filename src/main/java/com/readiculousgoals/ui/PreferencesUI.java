@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class PreferencesUI {
     public PreferencesUI(RegularUser user) {
         JFrame frame = new JFrame("Set Your Preferences");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(400, 600);
         JLabel welcomeLabel = new JLabel("Select your favorite genres:");
         welcomeLabel.setHorizontalAlignment(SwingConstants.CENTER);

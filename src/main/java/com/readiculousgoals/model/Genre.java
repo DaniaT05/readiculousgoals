@@ -31,4 +31,5 @@ public abstract class Genre implements Serializable {
         Genre genre = (Genre) obj;
         return name.equals(genre.name);
     }
+    
 }

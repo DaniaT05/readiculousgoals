@@ -5,12 +5,10 @@ import javax.swing.JOptionPane;
 public class RegularUser extends User {
     private static final int MAX_PREFERENCES = 15;
     private List<Genre> preferences = new ArrayList<>();
-
     // Default constructor
     public RegularUser() {
         super();
     }
-
     // Constructor with parameters
     public RegularUser(String fullName, int age, String username, String email, String password, Date joinDate, List<Genre> preferences) {
         super(fullName, age, username, email, password, joinDate);
