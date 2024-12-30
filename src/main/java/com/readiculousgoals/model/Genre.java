@@ -16,8 +16,19 @@ public abstract class Genre implements Serializable {
     public ArrayList<Book> listBooks() {
         return books;
     }
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
     public abstract ArrayList<Book> recommendBooks();
     public String getName() {
         return name;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Genre genre = (Genre) obj;
+        return name.equals(genre.name);
     }
 }

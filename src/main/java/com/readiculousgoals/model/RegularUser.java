@@ -37,7 +37,7 @@ public class RegularUser extends User {
     public boolean hasPreference(Genre genre) {
         return preferences.contains(genre);
     }
-
+    
     // Perform user-specific task (overridden method)
     @Override
     public void performUserSpecificTask() {

@@ -1,25 +1,40 @@
 package com.readiculousgoals.ui;
-import java.io.*;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Date;
-import javax.swing.*;
-import com.readiculousgoals.model.*;
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GradientPaint;
-import java.awt.Component;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+
+import com.readiculousgoals.model.AdminUser;
+import com.readiculousgoals.model.RegularUser;
+import com.readiculousgoals.model.User;
 //login, signup, reseting password
 // username for admin: admin 
 //password: admin123
 public class LoginPage {
-
     private JFrame frame;
     private JPanel loginPanel, signupPanel, resetPasswordPanel;
     private JTextField loginUsernameField, signupFullNameField, signupAgeField, signupUsernameField, signupEmailField, resetUsernameField, resetEmailField;
@@ -47,7 +62,6 @@ public class LoginPage {
 
         frame.setVisible(true);
     }
-
     private void initializeLoginPanel() {
         loginPanel = createGradientPanel(); // Set gradient background
         loginPanel.setLayout(new GridBagLayout());
@@ -113,7 +127,6 @@ public class LoginPage {
         gbc.gridy = 6;
         loginPanel.add(forgotPasswordButton, gbc);
     }
-
     private void initializeSignupPanel() {
         signupPanel = createGradientPanel(); // Set gradient background
         signupPanel.setLayout(new GridBagLayout());
@@ -197,7 +210,6 @@ public class LoginPage {
         gbc.gridy = 7;
         signupPanel.add(switchToLoginButton, gbc);
     }
-
     private void initializeResetPasswordPanel() {
         resetPasswordPanel = createGradientPanel(); // Set gradient background
         resetPasswordPanel.setLayout(new GridBagLayout());
@@ -261,7 +273,6 @@ public class LoginPage {
         gbc.gridy = 5;
         resetPasswordPanel.add(backToLoginButton, gbc);
     }
-
     private void handleLogin() {
         String username = loginUsernameField.getText();
         String password = new String(loginPasswordField.getPassword());
@@ -290,12 +301,10 @@ public class LoginPage {
         String username = signupUsernameField.getText();
         String email = signupEmailField.getText();
         String password = new String(signupPasswordField.getPassword());
-
         if (fullName.isEmpty() || ageStr.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty()) {
             JOptionPane.showMessageDialog(frame, "All fields are required.", "Signup Failed", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
         int age;
         try {
             age = Integer.parseInt(ageStr);
@@ -303,7 +312,6 @@ public class LoginPage {
             JOptionPane.showMessageDialog(frame, "Age must be a number.", "Signup Failed", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
         for (User user : users) {
             if (user.getUsername().equals(username)) {
                 JOptionPane.showMessageDialog(frame, "Username is already taken. Please choose a different one.", "Signup Failed", JOptionPane.ERROR_MESSAGE);
@@ -347,7 +355,6 @@ public class LoginPage {
         }
         JOptionPane.showMessageDialog(frame, "Username and email not found.", "Reset Failed", JOptionPane.ERROR_MESSAGE);
     }
-
     private void saveUsers() {
         File file = new File("src/main/java/com/readiculousgoals/data/users.dat");
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
@@ -392,21 +399,15 @@ public class LoginPage {
             return new ArrayList<>();
         }
     }
-    
-    
-
     private void showLoginPanel() {
         ((CardLayout) frame.getContentPane().getLayout()).show(frame.getContentPane(), "LOGIN");
     }
-
     private void showSignupPanel() {
         ((CardLayout) frame.getContentPane().getLayout()).show(frame.getContentPane(), "SIGNUP");
     }
-
     private void showResetPasswordPanel() {
         ((CardLayout) frame.getContentPane().getLayout()).show(frame.getContentPane(), "RESET_PASSWORD");
     }
-
     private JPanel createGradientPanel() {
         return new JPanel() {
             @Override
@@ -423,26 +424,22 @@ public class LoginPage {
             }
         };
     }
-
     private JLabel createLabel(String text) {
         JLabel label = new JLabel(text);
         label.setForeground(Color.WHITE);
         label.setFont(new Font("Verdana", Font.PLAIN, 14));
         return label;
     }
-
     private JTextField createTextField() {
         JTextField textField = new JTextField(15);
         textField.setFont(new Font("Verdana", Font.PLAIN, 14));
         return textField;
     }
-
     private JPasswordField createPasswordField() {
         JPasswordField passwordField = new JPasswordField(15);
         passwordField.setFont(new Font("Verdana", Font.PLAIN, 14));
         return passwordField;
     }
-
     private JButton createRoundedButton(String text, Color color) {
         JButton button = new ButtonUI(text);
         button.setFocusPainted(false);
