@@ -525,70 +525,70 @@ public class AdminControlsPage {
         viewBooksDialog.setVisible(true);
     }
 
-    private void openUpdateBooksDialog(JFrame frame) {
-        ArrayList<ReaderBook> books = FileUtilities.readAllObjects("books.dat", ReaderBook.class);
-        // Create dialog for updating books
-        JDialog updateBooksDialog = new JDialog(frame, "Update Books", true);
-        updateBooksDialog.setSize(600, 400);
-        updateBooksDialog.setLayout(new BorderLayout());
-        // Panel for displaying books
-        JPanel booksPanel = new JPanel();
-        booksPanel.setLayout(new BoxLayout(booksPanel, BoxLayout.Y_AXIS));
-        if (books.isEmpty()) {
-            JOptionPane.showMessageDialog(frame, "No books found.", "Info", JOptionPane.INFORMATION_MESSAGE);
-            return;
-        }
-        for (final ReaderBook book : books) {  // Made 'book' final for use in inner class
-            // Panel for each book
-            JPanel bookPanel = new JPanel(new BorderLayout());
-            bookPanel.setBorder(BorderFactory.createTitledBorder("Book Details"));
-            // Book details
-            JTextArea bookDetails = new JTextArea();
-            bookDetails.setEditable(false);
-            bookDetails.setText("Title: " + book.getTitle() + "\n"
-                    + "Author: " + book.getAuthor() + "\n"
-                    + "Genres: " + String.join(", ", book.getGenres()) + "\n"
-                    + "Age Rating: " + book.getAgeRating());
-            // Button for updating
-            JButton updateButton = new JButton("Update");
-            updateButton.addActionListener(updateEvent -> {
-                // Create a dialog for updating the book
-                JDialog updateBookDialog = new JDialog(updateBooksDialog, "Update Book", true);
-                updateBookDialog.setSize(500, 400);
-                updateBookDialog.setLayout(null);
-                // Labels and fields for book details
-                JLabel titleLabel = new JLabel("Title:");
-                JTextField titleField = new JTextField(book.getTitle());
-                JLabel authorLabel = new JLabel("Author:");
-                JTextField authorField = new JTextField(book.getAuthor());
-                JLabel genreLabel = new JLabel("Genres (comma-separated):");
-                JTextField genreField = new JTextField(String.join(", ", book.getGenres()));
-                JLabel ageRatingLabel = new JLabel("Age Rating:");
-                JTextField ageRatingField = new JTextField(book.getAgeRating());
-                JButton confirmButton = new JButton("Confirm");
-                JButton cancelButton = new JButton("Cancel");
-                // Set bounds for components
-                titleLabel.setBounds(20, 20, 150, 25);
-                titleField.setBounds(180, 20, 280, 25);
-                authorLabel.setBounds(20, 60, 150, 25);
-                authorField.setBounds(180, 60, 280, 25);
-                genreLabel.setBounds(20, 100, 150, 25);
-                genreField.setBounds(180, 100, 280, 25);
-                ageRatingLabel.setBounds(20, 140, 150, 25);
-                ageRatingField.setBounds(180, 140, 280, 25);
-                confirmButton.setBounds(100, 300, 120, 30);
-                cancelButton.setBounds(280, 300, 120, 30);
-                // Add components to the dialog
-                updateBookDialog.add(titleLabel);
-                updateBookDialog.add(titleField);
-                updateBookDialog.add(authorLabel);
-                updateBookDialog.add(authorField);
-                updateBookDialog.add(genreLabel);
-                updateBookDialog.add(genreField);
-                updateBookDialog.add(ageRatingLabel);
-                updateBookDialog.add(ageRatingField);
-                updateBookDialog.add(confirmButton);
-                updateBookDialog.add(cancelButton);
+            private void openUpdateBooksDialog(JFrame frame){
+                ArrayList<ReaderBook> books = FileUtilities.readAllObjects("books.dat", ReaderBook.class);
+                // Create dialog for updating books
+                JDialog updateBooksDialog = new JDialog(frame, "Update Books", true);
+                updateBooksDialog.setSize(600, 400);
+                updateBooksDialog.setLayout(new BorderLayout());
+                // Panel for displaying books
+                JPanel booksPanel = new JPanel();
+                booksPanel.setLayout(new BoxLayout(booksPanel, BoxLayout.Y_AXIS));
+                if (books.isEmpty()) {
+                    JOptionPane.showMessageDialog(frame, "No books found.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
+                for (final ReaderBook book : books) {  // Made 'book' final for use in inner class
+                    // Panel for each book
+                    JPanel bookPanel = new JPanel(new BorderLayout());
+                    bookPanel.setBorder(BorderFactory.createTitledBorder("Book Details"));
+                    // Book details
+                    JTextArea bookDetails = new JTextArea();
+                    bookDetails.setEditable(false);
+                    bookDetails.setText("Title: " + book.getTitle() + "\n"
+                            + "Author: " + book.getAuthor() + "\n"
+                            + "Genres: " + String.join(", ", book.getGenres()) + "\n"
+                            + "Age Rating: " + book.getAgeRating());
+                    // Button for updating
+                    JButton updateButton = new JButton("Update");
+                    updateButton.addActionListener(updateEvent -> {
+                        // Create a dialog for updating the book
+                        JDialog updateBookDialog = new JDialog(updateBooksDialog, "Update Book", true);
+                        updateBookDialog.setSize(500, 400);
+                        updateBookDialog.setLayout(null);
+                        // Labels and fields for book details
+                        JLabel titleLabel = new JLabel("Title:");
+                        JTextField titleField = new JTextField(book.getTitle());
+                        JLabel authorLabel = new JLabel("Author:");
+                        JTextField authorField = new JTextField(book.getAuthor());
+                        JLabel genreLabel = new JLabel("Genres (comma-separated):");
+                        JTextField genreField = new JTextField(String.join(", ", book.getGenres()));
+                        JLabel ageRatingLabel = new JLabel("Age Rating:");
+                        JTextField ageRatingField = new JTextField(book.getAgeRating());
+                        JButton confirmButton = new JButton("Confirm");
+                        JButton cancelButton = new JButton("Cancel");
+                        // Set bounds for components
+                        titleLabel.setBounds(20, 20, 150, 25);
+                        titleField.setBounds(180, 20, 280, 25);
+                        authorLabel.setBounds(20, 60, 150, 25);
+                        authorField.setBounds(180, 60, 280, 25);
+                        genreLabel.setBounds(20, 100, 150, 25);
+                        genreField.setBounds(180, 100, 280, 25);
+                        ageRatingLabel.setBounds(20, 140, 150, 25);
+                        ageRatingField.setBounds(180, 140, 280, 25);
+                        confirmButton.setBounds(100, 300, 120, 30);
+                        cancelButton.setBounds(280, 300, 120, 30);
+                        // Add components to the dialog
+                        updateBookDialog.add(titleLabel);
+                        updateBookDialog.add(titleField);
+                        updateBookDialog.add(authorLabel);
+                        updateBookDialog.add(authorField);
+                        updateBookDialog.add(genreLabel);
+                        updateBookDialog.add(genreField);
+                        updateBookDialog.add(ageRatingLabel);
+                        updateBookDialog.add(ageRatingField);
+                        updateBookDialog.add(confirmButton);
+                        updateBookDialog.add(cancelButton);
 
                 // Add functionality for Confirm button
                 confirmButton.addActionListener(confirmEvent -> {

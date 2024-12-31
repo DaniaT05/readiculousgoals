@@ -18,6 +18,16 @@ public class FileUtilities {
         }
     }
 
+    public static <T extends Serializable> void writeAllObjects(String filePath, ArrayList<T> objects) {
+        try {
+            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
+                oos.writeObject(objects);
+            }
+        } catch (IOException e) {
+            System.err.println("Error writing objects: " + e.getMessage());
+        }
+    }
+
     // Reads a serializable object from a file
     @SuppressWarnings("unchecked")
     public static <T extends Serializable> T readObjectFromFile(String filePath, Class<T> clazz) {
