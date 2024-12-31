@@ -5,51 +5,53 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReaderBook extends Book {
-    private static final String BOOKS_FILE = "books.ser";
-    private boolean isRead;
-    private double myRating;
-    private int pagesRead;
+
     private String status;
-    public ReaderBook(int bookId, String title, String author, ArrayList<String> genres, int pageCount, String ageRating, byte[] pdfContent, byte[] coverImage) {
-        super(bookId,title, author, genres, pageCount, ageRating, pdfContent, coverImage);
-        this.isRead = false;
-        this.myRating = 0.0;
+    private int pagesRead;
+    private double rateOutOf5;
+
+    public ReaderBook(int bookId, String title, String author, ArrayList<String> genres, int totalPages, String ageRating, String status,int pagesRead, byte[] pdfContent, byte[] coverImage) {
+        super(bookId, title, author, genres, totalPages, ageRating, pdfContent, coverImage);
+        this.status = "To Read";
         this.pagesRead = 0;
-        this.status = status;
+        this.rateOutOf5 = 0.0;
     }
 
     public boolean isRead() {
-        return isRead;
+        return "Completed".equalsIgnoreCase(status);
     }
 
     public void markAsRead() {
-        this.isRead = true;
+        this.status = "Completed";
     }
 
-    public void setMyRating(double myRating) {
-        if (!isRead) {
-            System.out.println("Cannot rate a book that hasn't been read.");
-        } else if (myRating < 0 || myRating > 5) {
-            System.out.println("Invalid rating. Please provide a rating between 0 and 5.");
+    public void setRateOutOf5(double rateOutOf5) {
+        if (isRead()) {
+            this.rateOutOf5 = rateOutOf5;
         } else {
-            this.myRating = myRating;
+            System.out.println("Cannot rate a book that hasn't been read.");
         }
     }
 
-    public static void saveBooks(List<Book> books) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(BOOKS_FILE))) {
-            oos.writeObject(books);
-        } catch (IOException e) {
-            System.out.println("Error saving books: " + e.getMessage());
-        }
+    // Setters
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public static List<Book> loadBooks() {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(BOOKS_FILE))) {
-            return (List<Book>) ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
+    public void setPagesRead(int pagesRead) {
+        this.pagesRead = pagesRead;
+    }
+
+    public int getTotalReaderPages() {
+        return getTotalPages();
+    }
+
+    public byte[] getPdfBookContent() {
+        return getPdfContent();
+    }
+
+    // Getter for coverImage
+    public byte[] getCoverImageContent() {
+        return getCoverImage();
     }
 }

@@ -201,7 +201,7 @@ debugLoadBooks();
         JLabel authorLabel = new JLabel("Author: " + book.getAuthor());
         JLabel genreLabel = new JLabel("Genre: " + book.getGenre());
         JLabel ageRatingLabel = new JLabel("Age Rating: " + book.getAgeRating());
-        JLabel pageCountLabel = new JLabel("Page Count: " + book.getPageCount());
+        JLabel pageCountLabel = new JLabel("Page Count: " + book.getTotalPages());
         
         detailsPanel.add(titleLabel);
         detailsPanel.add(Box.createVerticalStrut(5));
@@ -224,11 +224,9 @@ debugLoadBooks();
         
         JButton readNowButton = new JButton("Read Now");
         readNowButton.addActionListener(e -> {
-            ReaderBook readerBook = new ReaderBook(
-                book.getTitle(), book.getAuthor(), book.getGenre(),
-                book.getAgeRating(), "In Progress", book.getPageCount(),
-                0, book.getPdfContent(), book.getCoverImage()
-            );
+            ReaderBook readerBook = new ReaderBook(book.getBookId(),book.getTitle(), book.getAuthor(), book.getGenre(),book.getTotalPages(),
+                book.getAgeRating(), "In Progress",
+                0, book.getPdfContent(), book.getCoverImage());
             user.getProgressTracker().add(readerBook);
             JOptionPane.showMessageDialog(dialog, "Added to Progress Tracker!");
         });
@@ -472,7 +470,7 @@ debugLoadBooks();
                 System.out.println("  Author: " + book.getAuthor());
                 System.out.println("  Genre: " + book.getGenre());
                 System.out.println("  Age Rating: " + book.getAgeRating());
-                System.out.println("  Page Count: " + book.getPageCount());
+                System.out.println("  Page Count: " + book.getTotalPages());
                 System.out.println("  PDF Content: " + (book.getPdfContent() != null ? "Present" : "Not Present"));
                 System.out.println("  Cover Image: " + (book.getCoverImage() != null ? "Present" : "Not Present"));
             }

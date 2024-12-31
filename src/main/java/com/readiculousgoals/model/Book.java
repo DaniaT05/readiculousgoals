@@ -43,6 +43,9 @@ public class Book implements Serializable {
                 ", genres='" + genres + '\n' +
                 ", ageRating='" + ageRating + '\n';
     }
+    public int getBookId() {
+        return bookId;
+    }
     public String getTitle() {
         return title;
     }
