@@ -1,16 +1,14 @@
-package com.readiculousgoals.model;
+package TBR_Project;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-public class ReaderBook extends Book {
+class ReaderBook extends Book {
 
     private String status;
     private int pagesRead;
     private double rateOutOf5;
 
-    public ReaderBook(int bookId, String title, String author, ArrayList<String> genres, int totalPages, String ageRating, String status,int pagesRead, byte[] pdfContent, byte[] coverImage) {
+    public ReaderBook(int bookId, String title, String author, ArrayList<String> genres, int totalPages, String ageRating, byte[] pdfContent, byte[] coverImage) {
         super(bookId, title, author, genres, totalPages, ageRating, pdfContent, coverImage);
         this.status = "To Read";
         this.pagesRead = 0;
