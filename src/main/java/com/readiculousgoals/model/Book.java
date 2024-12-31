@@ -5,13 +5,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 public class Book implements Serializable {
-    private String title;
-    private String author;
-    private String genre;
-    private String ageRating;
-    private int pageCount;
-    private byte[] pdfContent; // To store PDF file as bytes
-    private byte[] coverImage; // To store image file as bytes
+    protected String title;
+    protected String author;
+    protected String genre;
+    protected String ageRating;
+    protected int pageCount;
+    protected byte[] pdfContent;
+    protected byte[] coverImage;
     public static byte[] fileToByteArray(File file) throws IOException {
         try (InputStream inputStream = new FileInputStream(file)) {
             byte[] byteArray = new byte[(int) file.length()];

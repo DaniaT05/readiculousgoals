@@ -1,5 +1,6 @@
 package com.readiculousgoals.model;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 public abstract class User implements Serializable {
     protected String fullName;
@@ -61,6 +62,12 @@ public abstract class User implements Serializable {
     }
     public void setJoinDate(Date joinDate) {
         this.joinDate = joinDate;
+    }
+    public void addAchievement(Achievement achievement) {
+        achievements.add(achievement);
+    }
+    public ArrayList<Achievement> getAchievements() {
+        return achievements;
     }
     public abstract void performUserSpecificTask();
 }
