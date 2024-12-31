@@ -36,7 +36,7 @@ public class AdminControlsPage {
         JButton deleteBooksButton = new JButton("Delete Books");
         JButton updateBooksButton = new JButton("Update Books");
         JButton viewBooksButton = new JButton("View Books");
-        JButton addChallengesButton = new JButton("Add Challenges");
+        // JButton addChallengesButton = new JButton("Add Challenges");
         JButton signOutButton = new JButton("Sign Out");
 
         // Button bounds
@@ -44,7 +44,7 @@ public class AdminControlsPage {
         deleteBooksButton.setBounds(120, 70, 150, 30);
         updateBooksButton.setBounds(120, 110, 150, 30);
         viewBooksButton.setBounds(120, 150, 150, 30);
-        addChallengesButton.setBounds(120, 190, 150, 30);
+        // addChallengesButton.setBounds(120, 190, 150, 30);
         signOutButton.setBounds(120, 230, 150, 30);
 
         // Action listeners for each button
@@ -75,13 +75,18 @@ public class AdminControlsPage {
                 openViewBooksDialog(frame);
             }
         });
-
-        addChallengesButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Add Achievements dialog opened.");
-            }
-        });
+        // addChallengesButton.addActionListener(new ActionListener() {
+        //     @Override
+        //     public void actionPerformed(ActionEvent e) {
+        //         JOptionPane.showMessageDialog(frame, "Add Achievements dialog opened.");
+        //     }
+        // });
+        // addAchievementsButton.addActionListener(new ActionListener() {
+        //     @Override
+        //     public void actionPerformed(ActionEvent e) {
+        //         JOptionPane.showMessageDialog(frame, "Add Achievements dialog opened.");
+        //     }
+        // });
 
         signOutButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
