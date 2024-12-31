@@ -36,10 +36,12 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.Box;
 import com.readiculousgoals.model.Book;
+import com.readiculousgoals.model.BookStorage;
 import com.readiculousgoals.model.Genre;
 import com.readiculousgoals.model.ReaderBook;
 import com.readiculousgoals.model.RegularUser;
 import com.readiculousgoals.model.User;
+
 
 public class ReaderHomepageUI extends JFrame {
     private RegularUser user;
@@ -48,8 +50,7 @@ public class ReaderHomepageUI extends JFrame {
     private JPanel leftPanel;
     private static final int MAX_VISIBLE_GENRES = 5;
     private JScrollPane mainScrollPane;
-    private int genreIndex = 0;
-
+    private static final int GENRE_PANEL_HEIGHT = 130; 
     public ReaderHomepageUI(User newUser) {
         RegularUser user = (RegularUser) newUser;
         this.user = user;
@@ -62,31 +63,26 @@ public class ReaderHomepageUI extends JFrame {
         initializeLeftPanel();
         initializeTopPanel();
 
-        // Calculate the available height for content
-        // Assuming top panel is about 50 pixels high
-        int availableHeight = 700 - 50; // Total height minus top panel height
-        int genrePanelHeight = availableHeight / MAX_VISIBLE_GENRES;
-
-        // Content Panel setup
-        contentPanel = new JPanel() {
-            @Override
-            public Dimension getPreferredSize() {
-                int preferredHeight = genrePanelHeight * Math.min(MAX_VISIBLE_GENRES, 
-                    Math.max(user.getPreferences().size(), MAX_VISIBLE_GENRES));
-                return new Dimension(getWidth(), preferredHeight);
-            }
-        };
-        contentPanel.setLayout(new GridLayout(MAX_VISIBLE_GENRES, 1, 0, 0));
-
-        // Main scroll pane
+        // Content Panel setup with fixed height rows
+        contentPanel = new JPanel();
+        contentPanel.setLayout(new GridLayout(0, 1)); // Use 0 for unlimited rows, 1 column
+        
+        // Set a preferred size that will show exactly 5 panels
+        contentPanel.setPreferredSize(new Dimension(getWidth() - 50, GENRE_PANEL_HEIGHT * MAX_VISIBLE_GENRES));
+        
+        // Main scroll pane setup
         mainScrollPane = new JScrollPane(contentPanel);
         mainScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         mainScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         mainScrollPane.getVerticalScrollBar().setUnitIncrement(16);
-        mainScrollPane.setBorder(null); // Remove border
+        mainScrollPane.setBorder(null);
+debugLoadBooks();
+
+        // Calculate the viewport height to show exactly 5 panels
+        mainScrollPane.setPreferredSize(new Dimension(getWidth() - 50, GENRE_PANEL_HEIGHT * MAX_VISIBLE_GENRES));
 
         add(mainScrollPane, BorderLayout.CENTER);
-        loadGenresAndBooks(genrePanelHeight);
+        loadGenresAndBooks();
         setVisible(true);
     }
 
@@ -121,41 +117,71 @@ public class ReaderHomepageUI extends JFrame {
         new PreferencesUI(user,ReaderHomepageUI.this);
         refreshHomepage(); // Pass the RegularUser to PreferencesUI
     }
-    private void loadRemainingGenres(List<Genre> remainingGenres) {
-        for (Genre genre : remainingGenres) {
-            JPanel genrePanel = createGenrePanel(genre.getName(),650/5);
-            contentPanel.add(genrePanel);
-        }
-        contentPanel.revalidate();
-        contentPanel.repaint();
-    }
+    // private void loadRemainingGenres(List<Genre> remainingGenres) {
+    //     for (Genre genre : remainingGenres) {
+    //         JPanel genrePanel = createGenrePanel(genre.getName());
+    //         contentPanel.add(genrePanel);
+    //     }
+    //     contentPanel.revalidate();
+    //     contentPanel.repaint();
+    // }
 
     private JPanel createBookContainer(Book book) {
-        JPanel bookContainer = new JPanel();
-        bookContainer.setLayout(new BorderLayout());
-        bookContainer.setPreferredSize(new Dimension(150, 200));
+        // Create main container with BorderLayout
+        JPanel bookContainer = new JPanel(new BorderLayout(5, 5));
+        bookContainer.setPreferredSize(new Dimension(100, 150)); // Adjust size as needed
+        bookContainer.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         
-        // Convert byte array to ImageIcon
-        ImageIcon coverIcon = new ImageIcon(book.getCoverImage());
-        Image scaledImage = coverIcon.getImage().getScaledInstance(150, 180, Image.SCALE_SMOOTH);
-        JLabel bookImage = new JLabel(new ImageIcon(scaledImage));
-        
-        JLabel bookTitle = new JLabel(book.getTitle(), SwingConstants.CENTER);
-        bookTitle.setFont(new Font("Arial", Font.PLAIN, 12));
-        
-        bookContainer.add(bookImage, BorderLayout.CENTER);
-        bookContainer.add(bookTitle, BorderLayout.SOUTH);
-        
-        bookContainer.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                openBookDialog(book);
+        try {
+            // Create and scale the cover image
+            ImageIcon coverIcon = new ImageIcon(book.getCoverImage());
+            Image scaledImage = coverIcon.getImage().getScaledInstance(90, 120, Image.SCALE_SMOOTH);
+            JLabel coverLabel = new JLabel(new ImageIcon(scaledImage));
+            coverLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            
+            // Create and style the title label
+            JLabel titleLabel = new JLabel(book.getTitle(), SwingConstants.CENTER);
+            titleLabel.setFont(new Font("Arial", Font.PLAIN, 11));
+            // If title is too long, add ellipsis
+            if (book.getTitle().length() > 15) {
+                titleLabel.setText(book.getTitle().substring(0, 12) + "...");
             }
-        });
+            titleLabel.setToolTipText(book.getTitle()); // Show full title on hover
+            
+            // Add components to container
+            bookContainer.add(coverLabel, BorderLayout.CENTER);
+            bookContainer.add(titleLabel, BorderLayout.SOUTH);
+            
+            // Add click listener for book details
+            bookContainer.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    openBookDialog(book);
+                }
+                
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    bookContainer.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+                    bookContainer.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+                }
+                
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    bookContainer.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+                    bookContainer.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                }
+            });
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            // If image loading fails, show placeholder
+            JLabel errorLabel = new JLabel("Cover Not Available");
+            errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            bookContainer.add(errorLabel, BorderLayout.CENTER);
+        }
         
         return bookContainer;
     }
-
     private void openBookDialog(Book book) {
         JDialog dialog = new JDialog(this, book.getTitle(), true);
         dialog.setLayout(new BorderLayout(10, 10));
@@ -219,22 +245,11 @@ public class ReaderHomepageUI extends JFrame {
         dialog.setVisible(true);
     }
     private List<Book> loadBooksForGenre(String genre) {
-        List<Book> booksForGenre = new ArrayList<>();
-        File file = new File("src/main/java/com/readiculousgoals/data/books.dat");
-        
-        if (file.exists()) {
-            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
-                List<Book> allBooks = (List<Book>) ois.readObject();
-                return allBooks.stream()
-                    .filter(book -> book.getGenre().equalsIgnoreCase(genre))
-                    .collect(java.util.stream.Collectors.toList());
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-        
-        return booksForGenre;
+        return BookStorage.loadBooks().stream()
+            .filter(book -> book.getGenre().equalsIgnoreCase(genre))
+            .collect(Collectors.toList());
     }
+    
     private void initializeLeftPanel() {
         leftPanel = new JPanel();
         leftPanel.setPreferredSize(new Dimension(200, getHeight()));
@@ -363,62 +378,64 @@ public class ReaderHomepageUI extends JFrame {
         return button;
     }
     /////
-    
 
-    
-
-    private void loadGenresAndBooks(int panelHeight) {
+    private void loadGenresAndBooks() {
         contentPanel.removeAll();
         List<Genre> preferences = user.getPreferences();
         
-        // Always show exactly MAX_VISIBLE_GENRES panels (filled or empty)
-        for (int i = 0; i < MAX_VISIBLE_GENRES; i++) {
-            if (i < preferences.size()) {
-                // Add genre panel with books
-                Genre genre = preferences.get(i);
-                JPanel genrePanel = createGenrePanel(genre.getName(), panelHeight);
-                contentPanel.add(genrePanel);
-            } else {
-                // Add empty panel
-                JPanel emptyPanel = createEmptyGenrePanel(panelHeight);
-                contentPanel.add(emptyPanel);
-            }
+        for (Genre genre : preferences) {
+            JPanel genrePanel = createGenrePanel(genre.getName());
+            contentPanel.add(genrePanel);
         }
 
-        // Only show scrollbar if we have more than MAX_VISIBLE_GENRES genres
-        mainScrollPane.setVerticalScrollBarPolicy(
-            preferences.size() > MAX_VISIBLE_GENRES ? 
-            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS : 
-            JScrollPane.VERTICAL_SCROLLBAR_NEVER
-        );
+        // Add empty panels if we have fewer than MAX_VISIBLE_GENRES
+        int emptyPanelsNeeded = Math.max(0, MAX_VISIBLE_GENRES - preferences.size());
+        for (int i = 0; i < emptyPanelsNeeded; i++) {
+            contentPanel.add(createEmptyGenrePanel(GENRE_PANEL_HEIGHT));
+        }
 
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
-    private JPanel createGenrePanel(String genre, int height) {
+
+    private JPanel createGenrePanel(String genre) {
+        // Create main panel with border layout
         JPanel genrePanel = new JPanel(new BorderLayout());
-        genrePanel.setBorder(BorderFactory.createTitledBorder(genre));
-        genrePanel.setPreferredSize(new Dimension(getWidth(), height));
+        genrePanel.setBorder(BorderFactory.createTitledBorder(
+            BorderFactory.createLineBorder(Color.GRAY),
+            genre,
+            javax.swing.border.TitledBorder.LEFT,
+            javax.swing.border.TitledBorder.TOP,
+            new Font("Arial", Font.BOLD, 14)
+        ));
+        genrePanel.setPreferredSize(new Dimension(getWidth(), GENRE_PANEL_HEIGHT));
         
-        // Books panel with horizontal scrolling
-        JPanel booksPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        // Create books panel with FlowLayout
+        JPanel booksPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
         List<Book> books = loadBooksForGenre(genre);
         
-        for (Book book : books) {
-            JPanel bookContainer = createBookContainer(book);
-            booksPanel.add(bookContainer);
+        if (books.isEmpty()) {
+            JLabel noBooksLabel = new JLabel("No books available for this genre");
+            noBooksLabel.setForeground(Color.GRAY);
+            booksPanel.add(noBooksLabel);
+        } else {
+            for (Book book : books) {
+                JPanel bookContainer = createBookContainer(book);
+                booksPanel.add(bookContainer);
+            }
         }
         
+        // Create scroll pane for horizontal scrolling
         JScrollPane scrollPane = new JScrollPane(booksPanel);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        scrollPane.setBorder(null); // Remove scroll pane border
         scrollPane.getHorizontalScrollBar().setUnitIncrement(16);
         
         genrePanel.add(scrollPane, BorderLayout.CENTER);
         return genrePanel;
     }
-
 
     private JPanel createEmptyGenrePanel(int height) {
         JPanel emptyPanel = new JPanel();
@@ -429,13 +446,51 @@ public class ReaderHomepageUI extends JFrame {
     }
     public void refreshHomepage() {
         SwingUtilities.invokeLater(() -> {
-            int availableHeight = getHeight() - 50;
-            int genrePanelHeight = availableHeight / MAX_VISIBLE_GENRES;
             contentPanel.removeAll();
-            loadGenresAndBooks(genrePanelHeight);
+            loadGenresAndBooks();
             contentPanel.revalidate();
             contentPanel.repaint();
         });
     }
+    private void debugLoadBooks() {
+        File file = new File("src/main/java/com/readiculousgoals/data/books.dat");
+    
+        if (!file.exists()) {
+            System.out.println("books.dat file not found at: " + file.getAbsolutePath());
+            return;
+        }
+    
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+            List<Book> allBooks = (List<Book>) ois.readObject();
+            System.out.println("Books loaded successfully! Total books: " + allBooks.size());
+    
+            // Print details of each book
+            for (int i = 0; i < allBooks.size(); i++) {
+                Book book = allBooks.get(i);
+                System.out.println("Book " + (i + 1) + ":");
+                System.out.println("  Title: " + book.getTitle());
+                System.out.println("  Author: " + book.getAuthor());
+                System.out.println("  Genre: " + book.getGenre());
+                System.out.println("  Age Rating: " + book.getAgeRating());
+                System.out.println("  Page Count: " + book.getPageCount());
+                System.out.println("  PDF Content: " + (book.getPdfContent() != null ? "Present" : "Not Present"));
+                System.out.println("  Cover Image: " + (book.getCoverImage() != null ? "Present" : "Not Present"));
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading books.dat file: " + e.getMessage());
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            System.err.println("Class not found while reading books.dat: " + e.getMessage());
+            e.printStackTrace();
+        } catch (ClassCastException e) {
+            System.err.println("Error casting object to List<Book>: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
 
 }
+   
+
+    
+    

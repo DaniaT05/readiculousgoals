@@ -10,6 +10,7 @@ public class RegularUser extends User {
     private List<Genre> preferences = new ArrayList<>(15);
     private List<Book> tbr = new ArrayList<>(100);
     private List<ReaderBook> progressTracker = new ArrayList<>(100);
+    private ArrayList<Achievement> achievements = new ArrayList<>(50);
 
     // Default constructor
     public RegularUser() {
@@ -79,5 +80,12 @@ public class RegularUser extends User {
     @Override
     public void performUserSpecificTask() {
         JOptionPane.showMessageDialog(null, "Regular User: Viewing your reading dashboard!");
+    }
+    
+    public void addAchievement(Achievement achievement) {
+        achievements.add(achievement);
+    }
+    public ArrayList<Achievement> getAchievements() {
+        return achievements;
     }
 }

@@ -285,7 +285,7 @@ public class LoginPage {
                 if (user instanceof RegularUser) {
                     new ReaderHomepageUI((RegularUser) user);
                 } else if (user instanceof AdminUser) {
-                    new AdminHomepageUI((AdminUser) user);
+                    new AdminControlsPage((AdminUser) user);
                 }
                 frame.dispose(); // Close the login frame
                 isAuthenticated = true;
@@ -333,7 +333,7 @@ public class LoginPage {
         saveUsers();
         JOptionPane.showMessageDialog(frame, "Signup successful! Redirecting to your homepage...", "Signup Successful", JOptionPane.INFORMATION_MESSAGE);
         if (newUser instanceof AdminUser) {
-            new AdminHomepageUI((AdminUser)newUser);
+            new AdminControlsPage((AdminUser)newUser);
         } else {
             new PreferencesUI((RegularUser)newUser,new ReaderHomepageUI(newUser));
         }
