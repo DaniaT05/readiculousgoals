@@ -11,7 +11,7 @@ public class Book implements Serializable {
     protected int bookId;
     protected String title;
     protected String author;
-    protected ArrayList<String> genres;
+    protected String genres;
     protected String ageRating;
     protected int pageCount;
     protected byte[] pdfContent;
@@ -23,7 +23,7 @@ public class Book implements Serializable {
             return byteArray;
         }
     }
-    public Book(int bookId, String title, String author, ArrayList<String> genres, int pageCount,
+    public Book(int bookId, String title, String author, String genres, int pageCount,
             String ageRating, byte[] pdfContent, byte[] coverImage) {
         this.bookId = bookId;
         this.title = title;
@@ -56,7 +56,7 @@ public class Book implements Serializable {
         return String.join(", ", genres); // Combines all genres into a single comma-separated string
     }
 
-    public ArrayList<String> getGenres() {
+    public String getGenres() {
         return genres;
     }
 
@@ -90,7 +90,7 @@ public class Book implements Serializable {
         this.author = author;
     }
 
-    public void setGenres(ArrayList<String> genres) {
+    public void setGenres(String genres) {
         this.genres = genres;
     }
 

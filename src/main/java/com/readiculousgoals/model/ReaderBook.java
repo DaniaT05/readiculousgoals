@@ -1,14 +1,13 @@
-package TBR_Project;
-
+package com.readiculousgoals.model;
 import java.util.*;
 
-class ReaderBook extends Book {
+public class ReaderBook extends Book {
 
     private String status;
     private int pagesRead;
     private double rateOutOf5;
 
-    public ReaderBook(int bookId, String title, String author, ArrayList<String> genres, int totalPages, String ageRating, byte[] pdfContent, byte[] coverImage) {
+    public ReaderBook(int bookId, String title, String author, String genres, int totalPages, String ageRating, String status, int pagesRead, byte[] pdfContent, byte[] coverImage) {
         super(bookId, title, author, genres, totalPages, ageRating, pdfContent, coverImage);
         this.status = "To Read";
         this.pagesRead = 0;
@@ -38,6 +37,12 @@ class ReaderBook extends Book {
 
     public void setPagesRead(int pagesRead) {
         this.pagesRead = pagesRead;
+    }
+    public int getPagesRead() {
+        return pagesRead;
+    }
+    public String getStatus() {
+        return status;
     }
 
     public int getTotalReaderPages() {

@@ -42,7 +42,6 @@ import com.readiculousgoals.model.ReaderBook;
 import com.readiculousgoals.model.RegularUser;
 import com.readiculousgoals.model.User;
 
-
 public class ReaderHomepageUI extends JFrame {
     private RegularUser user;
     private JPanel contentPanel;
@@ -224,9 +223,7 @@ debugLoadBooks();
         
         JButton readNowButton = new JButton("Read Now");
         readNowButton.addActionListener(e -> {
-            ReaderBook readerBook = new ReaderBook(book.getBookId(),book.getTitle(), book.getAuthor(), book.getGenre(),book.getTotalPages(),
-                book.getAgeRating(), "In Progress",
-                0, book.getPdfContent(), book.getCoverImage());
+            ReaderBook readerBook = new ReaderBook(book.getBookId(),book.getTitle(), book.getAuthor(), book.getGenre(),book.getTotalPages(),book.getAgeRating(), "In Progress",0, book.getPdfContent(), book.getCoverImage());
             user.getProgressTracker().add(readerBook);
             JOptionPane.showMessageDialog(dialog, "Added to Progress Tracker!");
         });

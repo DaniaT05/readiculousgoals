@@ -5,6 +5,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.IOException;
@@ -14,7 +18,9 @@ public class AdminControlsPage {
     private User adminUser;
 
     public AdminControlsPage(User adminUser) {
+        System.out.print("in constructor");
         this.adminUser = adminUser;
+        this.displayAdminControls();
     }
 
     public void displayAdminControls() {
@@ -88,7 +94,7 @@ public class AdminControlsPage {
         frame.add(deleteBooksButton);
         frame.add(updateBooksButton);
         frame.add(viewBooksButton);
-        frame.add(addAchievementsButton);
+        // frame.add(addAchievementsButton);
         frame.add(signOutButton);
 
         // Frame visibility
@@ -234,35 +240,38 @@ public class AdminControlsPage {
             }
         });
 
-        // Add action listener for "Add to Library" button
-        addButton.addActionListener(e1 -> {
+        addButton.addActionListener(e1 -> { 
             try {
                 // Get the entered details
                 String title = titleField.getText();
                 String author = authorField.getText();
-                String genre = genreField.getText();
+                String genre = genreField.getText();  // This will be a comma-separated string
                 String ageRating = ageRatingField.getText();
                 String pdfFilePath = pdfField.getText();
                 String coverImagePath = coverImageField.getText();
-
+        
                 // Validate input
                 if (title.isEmpty() || author.isEmpty() || genre.isEmpty() || ageRating.isEmpty() || pdfFilePath.isEmpty() || coverImagePath.isEmpty()) {
                     JOptionPane.showMessageDialog(addBookDialog, "All fields must be filled out!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-
+        
+                // Get total pages from PDF
+                int totalPages = FileUtilities.getPdfTotalPages(pdfFilePath);
+        
                 // Convert PDF and image to byte arrays
                 byte[] pdfContent = FileUtilities.getFileContentAsBytes(pdfFilePath);
                 byte[] coverImageContent = FileUtilities.getFileContentAsBytes(coverImagePath);
-
-                // Parse genres into a list
-                ArrayList<String> genres = new ArrayList<>();
-                for (String g : genre.split(",")) {
-                    genres.add(g.trim());
-                }
-
+        
+                // We don't need to split the genres into a list anymore, just pass the string
+                String genres = genre;  // Pass as is (comma-separated)
+        
+                // Default values for 'status' and 'pagesRead'
+                String status = "Not Started";  // Example default status
+                int pagesRead = 0;  // Starting pages read
+        
                 ArrayList<ReaderBook> books = FileUtilities.readAllObjects("books.dat", ReaderBook.class);
-
+        
                 // Check for duplicate book
                 boolean duplicateFound = false;
                 for (ReaderBook book : books) { // <-- Ensure 'books' is declared before this line
@@ -271,23 +280,23 @@ public class AdminControlsPage {
                         break;
                     }
                 }
-
+        
                 if (duplicateFound) {
                     JOptionPane.showMessageDialog(addBookDialog, "A book with the same title and author already exists!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-
-                // Create a new ReaderBook object
-                ReaderBook newBook = new ReaderBook(1, title, author, genres, 0, ageRating, pdfContent, coverImageContent);
-
+        
+                // Create a new ReaderBook object with totalPages, status, pagesRead, and genres as a string
+                ReaderBook newBook = new ReaderBook(1, title, author, genres, totalPages, ageRating, status, pagesRead, pdfContent, coverImageContent);
+        
                 // ArrayList<ReaderBook> books = FileUtilities.readAllObjects("books.dat", ReaderBook.class);
                 if (books.isEmpty()) {
                     System.out.println("No books found. Starting fresh.");
                 }
-
+        
                 // Append the new book to the list
                 books.add(newBook);
-
+        
                 // Save the new book to the file
                 FileUtilities.writeObjectToFile("books.dat", newBook);
                 JOptionPane.showMessageDialog(addBookDialog, "Book added successfully!");
@@ -296,6 +305,8 @@ public class AdminControlsPage {
                 JOptionPane.showMessageDialog(addBookDialog, "Error adding book: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
+        
+        
 
         // Add components to dialog
         addBookDialog.add(titleLabel);
@@ -602,25 +613,24 @@ public class AdminControlsPage {
                     try {
                         String updatedTitle = titleField.getText();
                         String updatedAuthor = authorField.getText();
-                        String updatedGenre = genreField.getText();
+                        String updatedGenre = genreField.getText();  // Genres as a comma-separated string
                         String updatedAgeRating = ageRatingField.getText();
-
+                
                         if (updatedTitle.isEmpty() || updatedAuthor.isEmpty() || updatedGenre.isEmpty() || updatedAgeRating.isEmpty()) {
                             JOptionPane.showMessageDialog(updateBookDialog, "All fields must be filled out!", "Error", JOptionPane.ERROR_MESSAGE);
                             return;
                         }
-
+                
                         // Check for duplicate books, excluding the current book being updated
                         for (ReaderBook existingBook : books) {
                             if (existingBook != book
-                                    && // Compare references instead of equals()
-                                    existingBook.getTitle().equalsIgnoreCase(updatedTitle)
+                                    && existingBook.getTitle().equalsIgnoreCase(updatedTitle)
                                     && existingBook.getAuthor().equalsIgnoreCase(updatedAuthor)) {
                                 JOptionPane.showMessageDialog(updateBookDialog, "A book with the same title and author already exists.", "Error", JOptionPane.ERROR_MESSAGE);
                                 return;
                             }
                         }
-
+                
                         // Find the exact book in the list and update it
                         int bookIndex = -1;
                         for (int i = 0; i < books.size(); i++) {
@@ -629,26 +639,28 @@ public class AdminControlsPage {
                                 break;
                             }
                         }
-
+                
                         if (bookIndex != -1) {
                             // Create a new book object with updated values
                             ReaderBook updatedBook = new ReaderBook(
                                     book.getBookId(),
                                     updatedTitle,
                                     updatedAuthor,
-                                    new ArrayList<>(Arrays.asList(updatedGenre.split(","))),
+                                    updatedGenre,  // Pass the genres string as it is
                                     book.getTotalReaderPages(),
                                     updatedAgeRating,
+                                    book.getStatus(),  // Preserving current status
+                                    book.getPagesRead(),  // Preserving current pagesRead
                                     book.getPdfContent(),
                                     book.getCoverImage()
                             );
-
+                
                             // Replace the old book with the updated one
                             books.set(bookIndex, updatedBook);
-
+                
                             // Write all books back to file
                             FileUtilities.writeAllObjects("books.dat", books);
-
+                
                             JOptionPane.showMessageDialog(updateBookDialog, "Book updated successfully!");
                             updateBookDialog.dispose();
                             updateBooksDialog.dispose(); // Close the main dialog to refresh the view
@@ -658,7 +670,7 @@ public class AdminControlsPage {
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(updateBookDialog, "Error updating book: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                });
+                });                
 
                         // Add functionality for Cancel button
                         cancelButton.addActionListener(cancelEvent -> updateBookDialog.dispose());
@@ -678,40 +690,38 @@ public class AdminControlsPage {
                 updateBooksDialog.setVisible(true);
             }
 
-            private void openSignOutDialogBox(JFrame frame){
-                signOutButton.addActionListener(e -> {
-                    // Create a confirmation dialog
-                    JDialog signOutDialog = new JDialog(frame, "Confirm Sign Out", true);
-                    signOutDialog.setSize(300, 150);
-                    signOutDialog.setLayout(null);
-        
-                    // Label for confirmation
-                    JLabel confirmLabel = new JLabel("Are you sure you want to sign out?");
-                    confirmLabel.setBounds(40, 20, 220, 25);
-                    signOutDialog.add(confirmLabel);
-        
-                    // "Yes" and "No" buttons
-                    JButton yesButton = new JButton("Yes");
-                    JButton noButton = new JButton("No");
-        
-                    yesButton.setBounds(60, 70, 80, 30);
-                    noButton.setBounds(160, 70, 80, 30);
-        
-                    signOutDialog.add(yesButton);
-                    signOutDialog.add(noButton);
-        
-                    // Action for "Yes" button
-                    yesButton.addActionListener(yesEvent -> {
-                        signOutDialog.dispose(); // Close the dialog
-                        frame.dispose(); // Close the admin's control page
-                        LoginPage(); // Display the login page (assuming the method exists in another class)
-                    });
-        
-                    // Action for "No" button
-                    noButton.addActionListener(noEvent -> signOutDialog.dispose());
-        
-                    // Show the dialog
-                    signOutDialog.setVisible(true);
+            private void openSignOutDialogBox(JFrame frame) {
+                // Create a confirmation dialog
+                JDialog signOutDialog = new JDialog(frame, "Confirm Sign Out", true);
+                signOutDialog.setSize(300, 150);
+                signOutDialog.setLayout(null);
+            
+                // Label for confirmation
+                JLabel confirmLabel = new JLabel("Are you sure you want to sign out?");
+                confirmLabel.setBounds(40, 20, 220, 25);
+                signOutDialog.add(confirmLabel);
+            
+                // "Yes" and "No" buttons
+                JButton yesButton = new JButton("Yes");
+                JButton noButton = new JButton("No");
+            
+                yesButton.setBounds(60, 70, 80, 30);
+                noButton.setBounds(160, 70, 80, 30);
+            
+                signOutDialog.add(yesButton);
+                signOutDialog.add(noButton);
+            
+                // Action for "Yes" button
+                yesButton.addActionListener(yesEvent -> {
+                    signOutDialog.dispose(); // Close the dialog
+                    frame.dispose(); // Close the admin's control page
+                    new LoginPage(); // Display the login page (assuming the method exists in another class)
                 });
+            
+                // Action for "No" button
+                noButton.addActionListener(noEvent -> signOutDialog.dispose());
+            
+                // Show the dialog
+                signOutDialog.setVisible(true);
             }
 }

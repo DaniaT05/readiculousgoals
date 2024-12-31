@@ -283,8 +283,10 @@ public class LoginPage {
                 JOptionPane.showMessageDialog(frame, "Login successful! Welcome, " + username + "!");
                 // Transition to ReaderHomepageUI
                 if (user instanceof RegularUser) {
+                    System.out.print("user is RegularUser");
                     new ReaderHomepageUI((RegularUser) user);
                 } else if (user instanceof AdminUser) {
+                    System.out.print("user is AdminUser");
                     new AdminControlsPage((AdminUser) user);
                 }
                 frame.dispose(); // Close the login frame
