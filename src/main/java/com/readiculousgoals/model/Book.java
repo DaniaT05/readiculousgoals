@@ -4,12 +4,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Book implements Serializable {
     private static final long serialVersionUID = 1L;
+    protected int bookId;
     protected String title;
     protected String author;
-    protected String genre;
+    protected ArrayList<String> genres;
     protected String ageRating;
     protected int pageCount;
     protected byte[] pdfContent;
@@ -21,15 +23,16 @@ public class Book implements Serializable {
             return byteArray;
         }
     }
-    public Book(String title, String author, String genre, String ageRating, int pageCount, byte[] pdfContent, byte[] coverImage) {
+    public Book(int bookId, String title, String author, ArrayList<String> genres, int pageCount,
+            String ageRating, byte[] pdfContent, byte[] coverImage) {
+        this.bookId = bookId;
         this.title = title;
         this.author = author;
-        this.genre = genre;
+        this.genres = genres;
+        this.pageCount = pageCount;
         this.ageRating = ageRating;
         this.pdfContent = pdfContent;
         this.coverImage = coverImage;
-        this.pageCount = pageCount;
-
     }
     
     @Override
@@ -37,7 +40,7 @@ public class Book implements Serializable {
         return "Book:\n" +
                 "title='" + title + '\n' +
                 ", author='" + author + '\n' +
-                ", genre='" + genre + '\n' +
+                ", genres='" + genres + '\n' +
                 ", ageRating='" + ageRating + '\n';
     }
     public String getTitle() {
@@ -46,19 +49,61 @@ public class Book implements Serializable {
     public String getAuthor() {
         return author;
     }
-    public byte[] getPdfContent() {
-        return pdfContent;
+    public String getGenre() {
+        return String.join(", ", genres); // Combines all genres into a single comma-separated string
     }
-    public byte[] getCoverImage() {
-        return coverImage;
+
+    public ArrayList<String> getGenres() {
+        return genres;
     }
+
+    public int getTotalPages() {
+        return pageCount;
+    }
+
     public String getAgeRating() {
         return ageRating;
     }
-    public String getGenre() {
-        return genre;
+
+    public byte[] getPdfContent() {
+        return pdfContent;
     }
-    public int getPageCount() {
-        return pageCount;
+
+    // Getter for coverImage
+    public byte[] getCoverImage() {
+        return coverImage;
+    }
+
+    // Setters 
+    public void setBookId(int bookId) {
+        this.bookId = bookId;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public void setGenres(ArrayList<String> genres) {
+        this.genres = genres;
+    }
+
+    public void setTotalPages(int pageCount) {
+        this.pageCount = pageCount;
+    }
+
+    public void setAgeRating(String ageRating) {
+        this.ageRating = ageRating;
+    }
+
+    public void setPdfContent(byte[] pdfContent) {
+        this.pdfContent = pdfContent;
+    }
+
+    public void setCoverImage(byte[] coverImage) {
+        this.coverImage = coverImage;
     }
 }

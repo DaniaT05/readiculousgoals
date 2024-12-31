@@ -7,13 +7,13 @@ import java.util.List;
 public class AdminBook extends Book {
     private static final String BOOKS_FILE = "src/main/java/com/readiculousgoals/data/books.dat";
 
-    public AdminBook(String title, String author, String genre, String ageRating, int pageCount, byte[] pdfContent, byte[] coverImage) {
-        super(title, author, genre, ageRating, pageCount, pdfContent, coverImage);
+    public AdminBook(int bookId, String title, String author, ArrayList<String> genres, String ageRating, int pageCount, byte[] pdfContent, byte[] coverImage) {
+        super(bookId,title, author, genres, pageCount, ageRating, pdfContent, coverImage);
     }
 
-    public void addBook(String title, String author, String genre, String ageRating, int pageCount, byte[] pdfContent, byte[] coverImage) {
+    public void addBook(String title, String author, ArrayList<String> genres, String ageRating, int pageCount, byte[] pdfContent, byte[] coverImage) {
         List<Book> books = loadBooks();
-        Book newBook = new Book(title, author, genre, ageRating, pageCount, pdfContent, coverImage);
+        Book newBook = new Book(bookId, title, author, genres, pageCount, ageRating, pdfContent, coverImage);
         books.add(newBook);
         saveBooks(books);
         System.out.println("New book added successfully!");

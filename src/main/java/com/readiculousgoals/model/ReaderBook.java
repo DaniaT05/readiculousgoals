@@ -10,8 +10,8 @@ public class ReaderBook extends Book {
     private double myRating;
     private int pagesRead;
     private String status;
-    public ReaderBook(String title, String author, String genre, String ageRating, String status, int pageCount, int pagesRead, byte[] pdfContent, byte[] coverImage) {
-        super(title, author, genre, ageRating, pageCount, pdfContent, coverImage);
+    public ReaderBook(int bookId, String title, String author, ArrayList<String> genres, int pageCount, String ageRating, byte[] pdfContent, byte[] coverImage) {
+        super(bookId,title, author, genres, pageCount, ageRating, pdfContent, coverImage);
         this.isRead = false;
         this.myRating = 0.0;
         this.pagesRead = 0;
