@@ -530,7 +530,7 @@ public class AdminControlsPage {
                 viewBooksDialog.setVisible(true);
             }
 
-            private openUpdateBooksDialog(JFrame frame){
+            private void openUpdateBooksDialog(JFrame frame){
                 ArrayList<ReaderBook> books = FileUtilities.readAllObjects("books.dat", ReaderBook.class);
                 // Create dialog for updating books
                 JDialog updateBooksDialog = new JDialog(frame, "Update Books", true);
