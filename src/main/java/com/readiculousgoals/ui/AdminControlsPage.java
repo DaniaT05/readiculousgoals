@@ -73,12 +73,19 @@ public class AdminControlsPage {
             }
         });
 
+        signOutButton.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                openSignOutDialogBox(frame);
+            }
+        });
+
         // Adding buttons to frame
         frame.add(addBooksButton);
         frame.add(deleteBooksButton);
         frame.add(updateBooksButton);
         frame.add(viewBooksButton);
         frame.add(addAchievementsButton);
+        frame.add(signOutButton);
 
         // Frame visibility
         frame.setVisible(true);
@@ -674,5 +681,42 @@ public class AdminControlsPage {
                 updateBooksDialog.add(scrollPane, BorderLayout.CENTER);
                 // Set dialog visibility
                 updateBooksDialog.setVisible(true);
+            }
+
+            private void openSignOutDialogBox(JFrame frame){
+                signOutButton.addActionListener(e -> {
+                    // Create a confirmation dialog
+                    JDialog signOutDialog = new JDialog(frame, "Confirm Sign Out", true);
+                    signOutDialog.setSize(300, 150);
+                    signOutDialog.setLayout(null);
+        
+                    // Label for confirmation
+                    JLabel confirmLabel = new JLabel("Are you sure you want to sign out?");
+                    confirmLabel.setBounds(40, 20, 220, 25);
+                    signOutDialog.add(confirmLabel);
+        
+                    // "Yes" and "No" buttons
+                    JButton yesButton = new JButton("Yes");
+                    JButton noButton = new JButton("No");
+        
+                    yesButton.setBounds(60, 70, 80, 30);
+                    noButton.setBounds(160, 70, 80, 30);
+        
+                    signOutDialog.add(yesButton);
+                    signOutDialog.add(noButton);
+        
+                    // Action for "Yes" button
+                    yesButton.addActionListener(yesEvent -> {
+                        signOutDialog.dispose(); // Close the dialog
+                        frame.dispose(); // Close the admin's control page
+                        LoginPage(); // Display the login page (assuming the method exists in another class)
+                    });
+        
+                    // Action for "No" button
+                    noButton.addActionListener(noEvent -> signOutDialog.dispose());
+        
+                    // Show the dialog
+                    signOutDialog.setVisible(true);
+                });
             }
 }
