@@ -421,66 +421,51 @@ public class AdminControlsPage {
         viewButton.setBounds(290, 100, 80, 25);
 
         // Add action listeners for radio buttons
-        // Action listener for the search radio button
-searchRadioButton.addActionListener(event -> {
-    searchField.setEnabled(true); // Enable the search field
-    searchCriteriaDropdown.setEnabled(true); // Enable the criteria dropdown
-    searchButton.setEnabled(true); // Enable the search button
-    genreDropdown.setEnabled(false); // Disable the genre dropdown
-    viewButton.setEnabled(false); // Disable the view button
-});
+        searchRadioButton.addActionListener(event -> {
+            searchField.setEnabled(true);
+            searchCriteriaDropdown.setEnabled(true);
+            searchButton.setEnabled(true);
+            genreDropdown.setEnabled(false);
+            viewButton.setEnabled(false);
+        });
 
-// Action listener for the genre radio button
-genreRadioButton.addActionListener(event -> {
-    searchField.setEnabled(false); // Disable the search field
-    searchCriteriaDropdown.setEnabled(false); // Disable the criteria dropdown
-    searchButton.setEnabled(false); // Disable the search button
-    genreDropdown.setEnabled(true); // Enable the genre dropdown
-    viewButton.setEnabled(true); // Enable the view button
-});
+        genreRadioButton.addActionListener(event -> {
+            searchField.setEnabled(false);
+            searchCriteriaDropdown.setEnabled(false);
+            searchButton.setEnabled(false);
+            genreDropdown.setEnabled(true);
+            viewButton.setEnabled(true);
+        });
 
-// Add action listener for the "Search" button
-searchButton.addActionListener(event -> {
-    String criteria = (String) searchCriteriaDropdown.getSelectedItem();
-    String query = searchField.getText().trim().toLowerCase();
+        // Add action listener for the "Search" button
+        searchButton.addActionListener(event -> {
+            String criteria = (String) searchCriteriaDropdown.getSelectedItem();
+            String query = searchField.getText().trim().toLowerCase();
 
-    if (query.isEmpty()) {
-        JOptionPane.showMessageDialog(viewBooksDialog, "Please enter a search term.", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
+            if (query.isEmpty()) {
+                JOptionPane.showMessageDialog(viewBooksDialog, "Please enter a search term.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
-    StringBuilder results = new StringBuilder();
-    for (ReaderBook book : books) {
-        if (criteria.equals("Title") && book.getTitle().toLowerCase().contains(query)
-                || criteria.equals("Author") && book.getAuthor().toLowerCase().contains(query)
-                || criteria.equals("Age Rating") && book.getAgeRating().toLowerCase().contains(query)) {
-            results.append("Title: ").append(book.getTitle())
-                    .append("\nAuthor: ").append(book.getAuthor())
-                    .append("\nGenres: ").append(String.join(", ", book.getGenres()))
-                    .append("\nAge Rating: ").append(book.getAgeRating())
-                    .append("\n------------------------\n");
-        }
-    }
+            StringBuilder results = new StringBuilder();
+            for (ReaderBook book : books) {
+                if (criteria.equals("Title") && book.getTitle().toLowerCase().contains(query)
+                        || criteria.equals("Author") && book.getAuthor().toLowerCase().contains(query)
+                        || criteria.equals("Age Rating") && book.getAgeRating().toLowerCase().contains(query)) {
+                    results.append("Title: ").append(book.getTitle())
+                            .append("\nAuthor: ").append(book.getAuthor())
+                            .append("\nGenres: ").append(String.join(", ", book.getGenres()))
+                            .append("\nAge Rating: ").append(book.getAgeRating())
+                            .append("\n------------------------\n");
+                }
+            }
 
-    if (results.length() == 0) {
-        JOptionPane.showMessageDialog(viewBooksDialog, "No books found.", "Info", JOptionPane.INFORMATION_MESSAGE);
-    } else {
-        // Create a JTextArea to hold the results
-        JTextArea textArea = new JTextArea(results.toString());
-        textArea.setEditable(false); // Make it non-editable
-        textArea.setLineWrap(true); // Enable line wrapping
-        textArea.setWrapStyleWord(true);
-
-        // Add the text area to a JScrollPane for vertical scrolling
-        JScrollPane scrollPane = new JScrollPane(textArea);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); // Always show vertical scrollbar
-        scrollPane.setPreferredSize(new Dimension(400, 100)); // Set preferred size for the scrollable pane
-
-        // Show the results in the scrollable dialog
-        JOptionPane.showMessageDialog(viewBooksDialog, scrollPane, "Search Results", JOptionPane.INFORMATION_MESSAGE);
-    }
-});
-
+            if (results.length() == 0) {
+                JOptionPane.showMessageDialog(viewBooksDialog, "No books found.", "Info", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(viewBooksDialog, results.toString(), "Search Results", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
 
         // Add action listener for the "View" button
         viewButton.addActionListener(event -> {
