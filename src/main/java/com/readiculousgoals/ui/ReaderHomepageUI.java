@@ -125,15 +125,6 @@ debugLoadBooks();
         new PreferencesUI(user,ReaderHomepageUI.this);
         refreshHomepage(); // Pass the RegularUser to PreferencesUI
     }
-    // private void loadRemainingGenres(List<Genre> remainingGenres) {
-    //     for (Genre genre : remainingGenres) {
-    //         JPanel genrePanel = createGenrePanel(genre.getName());
-    //         contentPanel.add(genrePanel);
-    //     }
-    //     contentPanel.revalidate();
-    //     contentPanel.repaint();
-    // }
-
     private JPanel createBookContainer(Book book) {
         // Create main container with BorderLayout
         JPanel bookContainer = new JPanel(new BorderLayout(5, 5));
@@ -625,11 +616,4 @@ debugLoadBooks();
     
         return tbrList;
     }
-    
-    
-
 }
-   
-
-    
-    
