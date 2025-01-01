@@ -490,6 +490,11 @@ public class AdminControlsPage {
         // });
 
         // Updated action listener for the "Search" button
+
+// Instance variable to hold the scroll pane (to avoid duplicates)
+JScrollPane resultsScrollPane = null;
+
+// Updated action listener for the "Search" button
 searchButton.addActionListener(event -> {
     String criteria = (String) searchCriteriaDropdown.getSelectedItem();
     String query = searchField.getText().trim().toLowerCase();
@@ -501,9 +506,9 @@ searchButton.addActionListener(event -> {
 
     StringBuilder results = new StringBuilder();
     for (ReaderBook book : books) {
-        if (criteria.equals("Title") && book.getTitle().toLowerCase().contains(query)
-                || criteria.equals("Author") && book.getAuthor().toLowerCase().contains(query)
-                || criteria.equals("Age Rating") && book.getAgeRating().toLowerCase().contains(query)) {
+        if ((criteria.equals("Title") && book.getTitle().toLowerCase().contains(query)) ||
+            (criteria.equals("Author") && book.getAuthor().toLowerCase().contains(query)) ||
+            (criteria.equals("Age Rating") && book.getAgeRating().toLowerCase().contains(query))) {
             results.append("Title: ").append(book.getTitle())
                     .append("\nAuthor: ").append(book.getAuthor())
                     .append("\nGenres: ").append(String.join(", ", book.getGenres()))
@@ -515,14 +520,21 @@ searchButton.addActionListener(event -> {
     if (results.length() == 0) {
         JOptionPane.showMessageDialog(viewBooksDialog, "No books found.", "Info", JOptionPane.INFORMATION_MESSAGE);
     } else {
+        // Create JTextArea for results
         JTextArea resultsArea = new JTextArea(results.toString());
         resultsArea.setEditable(false);
         resultsArea.setLineWrap(true);
         resultsArea.setWrapStyleWord(true);
 
-        JScrollPane scrollPane = new JScrollPane(resultsArea);
-        scrollPane.setBounds(20, 150, 440, 200);
-        viewBooksDialog.add(scrollPane);
+        // Remove the previous scroll pane if it exists
+        if (resultsScrollPane != null) {
+            viewBooksDialog.remove(resultsScrollPane);
+        }
+
+        // Add new scroll pane with results
+        resultsScrollPane = new JScrollPane(resultsArea);
+        resultsScrollPane.setBounds(20, 150, 440, 200);
+        viewBooksDialog.add(resultsScrollPane);
         viewBooksDialog.revalidate();
         viewBooksDialog.repaint();
     }
@@ -546,14 +558,21 @@ viewButton.addActionListener(event -> {
     if (bookList.length() == 0) {
         JOptionPane.showMessageDialog(viewBooksDialog, "No books found of this genre.", "Info", JOptionPane.INFORMATION_MESSAGE);
     } else {
+        // Create JTextArea for book list
         JTextArea bookListArea = new JTextArea(bookList.toString());
         bookListArea.setEditable(false);
         bookListArea.setLineWrap(true);
         bookListArea.setWrapStyleWord(true);
 
-        JScrollPane scrollPane = new JScrollPane(bookListArea);
-        scrollPane.setBounds(20, 150, 440, 200);
-        viewBooksDialog.add(scrollPane);
+        // Remove the previous scroll pane if it exists
+        if (resultsScrollPane != null) {
+            viewBooksDialog.remove(resultsScrollPane);
+        }
+
+        // Add new scroll pane with book list
+        resultsScrollPane = new JScrollPane(bookListArea);
+        resultsScrollPane.setBounds(20, 150, 440, 200);
+        viewBooksDialog.add(resultsScrollPane);
         viewBooksDialog.revalidate();
         viewBooksDialog.repaint();
     }
