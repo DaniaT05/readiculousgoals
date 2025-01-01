@@ -438,56 +438,126 @@ public class AdminControlsPage {
         });
 
         // Add action listener for the "Search" button
-        searchButton.addActionListener(event -> {
-            String criteria = (String) searchCriteriaDropdown.getSelectedItem();
-            String query = searchField.getText().trim().toLowerCase();
+        // searchButton.addActionListener(event -> {
+        //     String criteria = (String) searchCriteriaDropdown.getSelectedItem();
+        //     String query = searchField.getText().trim().toLowerCase();
 
-            if (query.isEmpty()) {
-                JOptionPane.showMessageDialog(viewBooksDialog, "Please enter a search term.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+        //     if (query.isEmpty()) {
+        //         JOptionPane.showMessageDialog(viewBooksDialog, "Please enter a search term.", "Error", JOptionPane.ERROR_MESSAGE);
+        //         return;
+        //     }
 
-            StringBuilder results = new StringBuilder();
-            for (ReaderBook book : books) {
-                if (criteria.equals("Title") && book.getTitle().toLowerCase().contains(query)
-                        || criteria.equals("Author") && book.getAuthor().toLowerCase().contains(query)
-                        || criteria.equals("Age Rating") && book.getAgeRating().toLowerCase().contains(query)) {
-                    results.append("Title: ").append(book.getTitle())
-                            .append("\nAuthor: ").append(book.getAuthor())
-                            .append("\nGenres: ").append(String.join(", ", book.getGenres()))
-                            .append("\nAge Rating: ").append(book.getAgeRating())
-                            .append("\n------------------------\n");
-                }
-            }
+        //     StringBuilder results = new StringBuilder();
+        //     for (ReaderBook book : books) {
+        //         if (criteria.equals("Title") && book.getTitle().toLowerCase().contains(query)
+        //                 || criteria.equals("Author") && book.getAuthor().toLowerCase().contains(query)
+        //                 || criteria.equals("Age Rating") && book.getAgeRating().toLowerCase().contains(query)) {
+        //             results.append("Title: ").append(book.getTitle())
+        //                     .append("\nAuthor: ").append(book.getAuthor())
+        //                     .append("\nGenres: ").append(String.join(", ", book.getGenres()))
+        //                     .append("\nAge Rating: ").append(book.getAgeRating())
+        //                     .append("\n------------------------\n");
+        //         }
+        //     }
 
-            if (results.length() == 0) {
-                JOptionPane.showMessageDialog(viewBooksDialog, "No books found.", "Info", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(viewBooksDialog, results.toString(), "Search Results", JOptionPane.INFORMATION_MESSAGE);
-            }
-        });
+        //     if (results.length() == 0) {
+        //         JOptionPane.showMessageDialog(viewBooksDialog, "No books found.", "Info", JOptionPane.INFORMATION_MESSAGE);
+        //     } else {
+        //         JOptionPane.showMessageDialog(viewBooksDialog, results.toString(), "Search Results", JOptionPane.INFORMATION_MESSAGE);
+        //     }
+        // });
 
-        // Add action listener for the "View" button
-        viewButton.addActionListener(event -> {
-            String selectedGenre = (String) genreDropdown.getSelectedItem();
+        // // Add action listener for the "View" button
+        // viewButton.addActionListener(event -> {
+        //     String selectedGenre = (String) genreDropdown.getSelectedItem();
 
-            StringBuilder bookList = new StringBuilder();
-            for (ReaderBook book : books) {
-                if ("All".equals(selectedGenre) || book.getGenres().contains(selectedGenre)) {
-                    bookList.append("Title: ").append(book.getTitle())
-                            .append("\nAuthor: ").append(book.getAuthor())
-                            .append("\nGenres: ").append(String.join(", ", book.getGenres()))
-                            .append("\nAge Rating: ").append(book.getAgeRating())
-                            .append("\n------------------------\n");
-                }
-            }
+        //     StringBuilder bookList = new StringBuilder();
+        //     for (ReaderBook book : books) {
+        //         if ("All".equals(selectedGenre) || book.getGenres().contains(selectedGenre)) {
+        //             bookList.append("Title: ").append(book.getTitle())
+        //                     .append("\nAuthor: ").append(book.getAuthor())
+        //                     .append("\nGenres: ").append(String.join(", ", book.getGenres()))
+        //                     .append("\nAge Rating: ").append(book.getAgeRating())
+        //                     .append("\n------------------------\n");
+        //         }
+        //     }
 
-            if (bookList.length() == 0) {
-                JOptionPane.showMessageDialog(viewBooksDialog, "No books found of this genre.", "Info", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(viewBooksDialog, bookList.toString(), "Books", JOptionPane.INFORMATION_MESSAGE);
-            }
-        });
+        //     if (bookList.length() == 0) {
+        //         JOptionPane.showMessageDialog(viewBooksDialog, "No books found of this genre.", "Info", JOptionPane.INFORMATION_MESSAGE);
+        //     } else {
+        //         JOptionPane.showMessageDialog(viewBooksDialog, bookList.toString(), "Books", JOptionPane.INFORMATION_MESSAGE);
+        //     }
+        // });
+
+        // Updated action listener for the "Search" button
+searchButton.addActionListener(event -> {
+    String criteria = (String) searchCriteriaDropdown.getSelectedItem();
+    String query = searchField.getText().trim().toLowerCase();
+
+    if (query.isEmpty()) {
+        JOptionPane.showMessageDialog(viewBooksDialog, "Please enter a search term.", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    StringBuilder results = new StringBuilder();
+    for (ReaderBook book : books) {
+        if (criteria.equals("Title") && book.getTitle().toLowerCase().contains(query)
+                || criteria.equals("Author") && book.getAuthor().toLowerCase().contains(query)
+                || criteria.equals("Age Rating") && book.getAgeRating().toLowerCase().contains(query)) {
+            results.append("Title: ").append(book.getTitle())
+                    .append("\nAuthor: ").append(book.getAuthor())
+                    .append("\nGenres: ").append(String.join(", ", book.getGenres()))
+                    .append("\nAge Rating: ").append(book.getAgeRating())
+                    .append("\n------------------------\n");
+        }
+    }
+
+    if (results.length() == 0) {
+        JOptionPane.showMessageDialog(viewBooksDialog, "No books found.", "Info", JOptionPane.INFORMATION_MESSAGE);
+    } else {
+        JTextArea resultsArea = new JTextArea(results.toString());
+        resultsArea.setEditable(false);
+        resultsArea.setLineWrap(true);
+        resultsArea.setWrapStyleWord(true);
+
+        JScrollPane scrollPane = new JScrollPane(resultsArea);
+        scrollPane.setBounds(20, 150, 440, 200);
+        viewBooksDialog.add(scrollPane);
+        viewBooksDialog.revalidate();
+        viewBooksDialog.repaint();
+    }
+});
+
+// Updated action listener for the "View" button
+viewButton.addActionListener(event -> {
+    String selectedGenre = (String) genreDropdown.getSelectedItem();
+
+    StringBuilder bookList = new StringBuilder();
+    for (ReaderBook book : books) {
+        if ("All".equals(selectedGenre) || book.getGenres().contains(selectedGenre)) {
+            bookList.append("Title: ").append(book.getTitle())
+                    .append("\nAuthor: ").append(book.getAuthor())
+                    .append("\nGenres: ").append(String.join(", ", book.getGenres()))
+                    .append("\nAge Rating: ").append(book.getAgeRating())
+                    .append("\n------------------------\n");
+        }
+    }
+
+    if (bookList.length() == 0) {
+        JOptionPane.showMessageDialog(viewBooksDialog, "No books found of this genre.", "Info", JOptionPane.INFORMATION_MESSAGE);
+    } else {
+        JTextArea bookListArea = new JTextArea(bookList.toString());
+        bookListArea.setEditable(false);
+        bookListArea.setLineWrap(true);
+        bookListArea.setWrapStyleWord(true);
+
+        JScrollPane scrollPane = new JScrollPane(bookListArea);
+        scrollPane.setBounds(20, 150, 440, 200);
+        viewBooksDialog.add(scrollPane);
+        viewBooksDialog.revalidate();
+        viewBooksDialog.repaint();
+    }
+});
 
         // Disable search and enable view by default
         genreRadioButton.setSelected(true);
