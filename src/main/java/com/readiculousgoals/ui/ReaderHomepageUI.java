@@ -9,8 +9,10 @@ import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -19,16 +21,23 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.ImageType;
+import org.apache.pdfbox.rendering.PDFRenderer;
+
 import javax.swing.JButton;
 import javax.swing.BoxLayout;
 import java.awt.Component;
 import java.awt.MediaTracker;
+import java.awt.image.BufferedImage;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JDialog;
+import javax.swing.JEditorPane;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
@@ -133,7 +142,13 @@ debugLoadBooks();
         
         try {
             // Create and scale the cover image
-            ImageIcon coverIcon = new ImageIcon(book.getCoverImage());
+            ImageIcon coverIcon;
+            if (book.getCoverImage() != null) {
+                coverIcon = new ImageIcon(book.getCoverImage());
+            } else {
+                // Provide a default image or handle the null case appropriately
+                coverIcon = new ImageIcon("src/main/java/com/readiculousgoals/resources/dummy.jpeg");
+            }
             Image scaledImage = coverIcon.getImage().getScaledInstance(90, 120, Image.SCALE_SMOOTH);
             JLabel coverLabel = new JLabel(new ImageIcon(scaledImage));
             coverLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -171,6 +186,7 @@ debugLoadBooks();
                 }
             });
             
+
         } catch (Exception e) {
             e.printStackTrace();
             // If image loading fails, show placeholder
@@ -182,12 +198,20 @@ debugLoadBooks();
         return bookContainer;
     }
     private void openBookDialog(Book book) {
+        System.out.println("Opening book dialog for: " + book.getTitle());
         JDialog dialog = new JDialog(this, book.getTitle(), true);
         dialog.setLayout(new BorderLayout(10, 10));
         dialog.setSize(400, 500);
         
         // Create book cover panel
-        ImageIcon coverIcon = new ImageIcon(book.getCoverImage());
+        ImageIcon coverIcon;
+        if (book.getCoverImage() != null) {
+            coverIcon = new ImageIcon(book.getCoverImage());
+        } else {
+            // Provide a default image or handle the null case appropriately
+            coverIcon = new ImageIcon("src/main/java/com/readiculousgoals/resources/dummy.jpeg");
+        }
+            
         Image scaledImage = coverIcon.getImage().getScaledInstance(200, 250, Image.SCALE_SMOOTH);
         JLabel bookImage = new JLabel(new ImageIcon(scaledImage));
         
@@ -225,7 +249,40 @@ debugLoadBooks();
         readNowButton.addActionListener(e -> {
             ReaderBook readerBook = new ReaderBook(book.getBookId(),book.getTitle(), book.getAuthor(), book.getGenre(),book.getTotalPages(),book.getAgeRating(), "In Progress",0, book.getPdfContent(), book.getCoverImage());
             user.getProgressTracker().add(readerBook);
-            JOptionPane.showMessageDialog(dialog, "Added to Progress Tracker!");
+            // JOptionPane.showMessageDialog(dialog, "Added to Progress Tracker!");
+
+            
+            // Create a new JFrame to display the book content
+            JFrame bookFrame = new JFrame("Reading: " + book.getTitle());
+            bookFrame.setSize(800, 600); // Set optimal width and height
+            bookFrame.setLayout(new BorderLayout());
+            bookFrame.setLocationRelativeTo(null);
+
+                // Create a JPanel to display the PDF content
+                JPanel pdfPanel = new JPanel();
+                pdfPanel.setLayout(new BoxLayout(pdfPanel, BoxLayout.Y_AXIS));
+
+                // Convert the byte array to an InputStream and render the PDF content
+                try (PDDocument document = PDDocument.load(new ByteArrayInputStream(book.getPdfContent()))) {
+                    PDFRenderer pdfRenderer = new PDFRenderer(document);
+                    for (int page = 0; page < document.getNumberOfPages(); ++page) {
+                        BufferedImage bim = pdfRenderer.renderImageWithDPI(page, 80, ImageType.RGB);
+                        ImageIcon imageIcon = new ImageIcon(bim);
+                        JLabel label = new JLabel(imageIcon);
+                        pdfPanel.add(label);
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(bookFrame, "Failed to load PDF content.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Make the book content scrollable
+                JScrollPane scrollPane = new JScrollPane(pdfPanel);
+                bookFrame.add(scrollPane, BorderLayout.CENTER);
+
+                // Show the book frame
+                bookFrame.setVisible(true);
         });
         
         buttonsPanel.add(addToTBRButton);
@@ -240,9 +297,23 @@ debugLoadBooks();
         dialog.setVisible(true);
     }
     private List<Book> loadBooksForGenre(String genre) {
-        return BookStorage.loadBooks().stream()
-            .filter(book -> book.getGenre().equalsIgnoreCase(genre))
+        System.out.println("Input Genre: " + genre);
+    
+        List<Book> allBooks = BookStorage.loadBooks();
+        System.out.println("All Books: " + allBooks);
+        
+        List<Book> filteredBooks = allBooks.stream()
+            .filter(book -> {
+                List<String> bookGenres = Arrays.asList(book.getGenre().split(","));
+                System.out.println("Book Genres: " + bookGenres);
+                boolean matches = bookGenres.stream().anyMatch(g -> g.trim().equalsIgnoreCase(genre));
+                System.out.println("Book: " + book + ", Matches: " + matches);
+                return matches;
+            })
             .collect(Collectors.toList());
+        
+        System.out.println("Filtered Books: " + filteredBooks);
+        return filteredBooks;
     }
     
     private void initializeLeftPanel() {
@@ -449,13 +520,13 @@ debugLoadBooks();
     }
     private void debugLoadBooks() {
         File file = new File("src/main/java/com/readiculousgoals/data/books.dat");
-    
+        System.out.println("test");
         if (!file.exists()) {
             System.out.println("books.dat file not found at: " + file.getAbsolutePath());
             return;
         }
     
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("books.dat"))) {
             List<Book> allBooks = (List<Book>) ois.readObject();
             System.out.println("Books loaded successfully! Total books: " + allBooks.size());
     

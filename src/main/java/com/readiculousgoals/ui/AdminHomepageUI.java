@@ -228,13 +228,7 @@
 //     }
 
 //     // Utility method to extract cover image from PDF
-//     private Image extractCoverFromPDF(String pdfFilePath, int pageNum) throws IOException {
-//         try (PDDocument document = PDDocument.load(new File(pdfFilePath))) {
-//             PDFRenderer pdfRenderer = new PDFRenderer(document);
-//             BufferedImage bufferedImage = pdfRenderer.renderImage(pageNum);
-//             return bufferedImage;
-//         }
-//     }
+    
 
 //     // Utility method to convert file to bytes
 //     private byte[] getFileBytes(String filePath) {

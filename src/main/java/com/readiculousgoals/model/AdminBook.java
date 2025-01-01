@@ -6,7 +6,8 @@ import java.util.List;
 
 public class AdminBook extends Book {
     private static final String BOOKS_FILE = "src/main/java/com/readiculousgoals/data/books.dat";
-
+    private static final long serialVersionUID = 2306690647651245740L;  
+    
     public AdminBook(int bookId, String title, String author, String genres, String ageRating, int pageCount, byte[] pdfContent, byte[] coverImage) {
         super(bookId,title, author, genres, pageCount, ageRating, pdfContent, coverImage);
     }

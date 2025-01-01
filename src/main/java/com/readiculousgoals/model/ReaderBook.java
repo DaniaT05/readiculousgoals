@@ -57,4 +57,17 @@ public class ReaderBook extends Book {
     public byte[] getCoverImageContent() {
         return getCoverImage();
     }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        ReaderBook that = (ReaderBook) obj;
+        return title.equalsIgnoreCase(that.title) && author.equalsIgnoreCase(that.author);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, author);
+    }
+
 }

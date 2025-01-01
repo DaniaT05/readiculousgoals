@@ -267,6 +267,8 @@ public class AdminControlsPage {
                 // Convert PDF and image to byte arrays
                 byte[] pdfContent = FileUtilities.getFileContentAsBytes(pdfFilePath);
                 byte[] coverImageContent = FileUtilities.getFileContentAsBytes(coverImagePath);
+                System.out.println("pdfContent: "+pdfContent);
+                System.out.println("coverImageContent: "+coverImageContent);
         
                 // We don't need to split the genres into a list anymore, just pass the string
                 String genres = genre;  // Pass as is (comma-separated)
@@ -275,7 +277,7 @@ public class AdminControlsPage {
                 String status = "Not Started";  // Example default status
                 int pagesRead = 0;  // Starting pages read
         
-                ArrayList<ReaderBook> books = FileUtilities.readAllObjects("books.dat", ReaderBook.class);
+                ArrayList<ReaderBook> books = FileUtilities.readAllObjects("src/main/java/com/readiculousgoals/data/books.dat", ReaderBook.class);
         
                 // Check for duplicate book
                 boolean duplicateFound = false;
@@ -294,8 +296,11 @@ public class AdminControlsPage {
                 // Create a new ReaderBook object with totalPages, status, pagesRead, and genres as a string
                 ReaderBook newBook = new ReaderBook(1, title, author, genres, totalPages, ageRating, status, pagesRead, pdfContent, coverImageContent);
         
+                System.out.println("New book: " + newBook);
+                ArrayList<ReaderBook> allbooks = FileUtilities.readAllObjects("src/main/java/com/readiculousgoals/data/books.dat", ReaderBook.class);
+
                 // ArrayList<ReaderBook> books = FileUtilities.readAllObjects("books.dat", ReaderBook.class);
-                if (books.isEmpty()) {
+                if (allbooks.isEmpty()) {
                     System.out.println("No books found. Starting fresh.");
                 }
         
@@ -303,7 +308,7 @@ public class AdminControlsPage {
                 books.add(newBook);
         
                 // Save the new book to the file
-                FileUtilities.writeObjectToFile("books.dat", newBook);
+                FileUtilities.writeObjectToFile("src/main/java/com/readiculousgoals/data/books.dat", newBook);
                 JOptionPane.showMessageDialog(addBookDialog, "Book added successfully!");
                 addBookDialog.dispose();
             } catch (Exception ex) {
@@ -361,7 +366,7 @@ public class AdminControlsPage {
             String authorName = authorNameField.getText();
 
             // Read books from file
-            ArrayList<ReaderBook> books = FileUtilities.readAllObjects("books.dat", ReaderBook.class);
+            ArrayList<ReaderBook> books = FileUtilities.readAllObjects("src/main/java/com/readiculousgoals/data/books.dat", ReaderBook.class);
             ReaderBook bookToDelete = null;
 
             // Find the book to delete
@@ -390,7 +395,7 @@ public class AdminControlsPage {
                     books.remove(bookToDelete);
 
                     // Write the updated list back to the file
-                    try (FileOutputStream fos = new FileOutputStream("books.dat"); ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+                    try (FileOutputStream fos = new FileOutputStream("src/main/java/com/readiculousgoals/data/books.dat"); ObjectOutputStream oos = new ObjectOutputStream(fos)) {
                         oos.writeObject(books);  // Make sure this writes the entire list
                         JOptionPane.showMessageDialog(deleteDialog,
                                 "Book deleted successfully.",
@@ -417,7 +422,7 @@ public class AdminControlsPage {
     }
 
     private void openViewBooksDialog(JFrame frame) {
-        ArrayList<ReaderBook> books = FileUtilities.readAllObjects("books.dat", ReaderBook.class);
+        ArrayList<ReaderBook> books = FileUtilities.readAllObjects("src/main/java/com/readiculousgoals/data/books.dat", ReaderBook.class);
 
         // New dialog for viewing books
         JDialog viewBooksDialog = new JDialog(frame, "View Books", true);
@@ -549,7 +554,7 @@ public class AdminControlsPage {
     }
 
             private void openUpdateBooksDialog(JFrame frame){
-                ArrayList<ReaderBook> books = FileUtilities.readAllObjects("books.dat", ReaderBook.class);
+                ArrayList<ReaderBook> books = FileUtilities.readAllObjects("src/main/java/com/readiculousgoals/data/books.dat", ReaderBook.class);
                 // Create dialog for updating books
                 JDialog updateBooksDialog = new JDialog(frame, "Update Books", true);
                 updateBooksDialog.setSize(600, 400);
@@ -664,7 +669,7 @@ public class AdminControlsPage {
                             books.set(bookIndex, updatedBook);
                 
                             // Write all books back to file
-                            FileUtilities.writeAllObjects("books.dat", books);
+                            FileUtilities.writeAllObjects("src/main/java/com/readiculousgoals/data/books.dat", books);
                 
                             JOptionPane.showMessageDialog(updateBookDialog, "Book updated successfully!");
                             updateBookDialog.dispose();
