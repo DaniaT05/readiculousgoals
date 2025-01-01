@@ -241,9 +241,28 @@ debugLoadBooks();
         
         JButton addToTBRButton = new JButton("Add to TBR");
         addToTBRButton.addActionListener(e -> {
-            user.getTbr().add(book);
-            JOptionPane.showMessageDialog(dialog, "Added to TBR successfully!");
+            try {
+                // Print the TBR list before adding the book
+                System.out.println("TBR List Before Adding: " + user.getTbr());
+
+                // Add the book to the TBR list
+                user.getTbr().add(book);
+
+                // Print the TBR list after adding the book
+                System.out.println("TBR List After Adding: " + user.getTbr());
+
+                // Write the updated TBR list to tbr.dat
+                writeTBRToFile("src/main/java/com/readiculousgoals/data/tbr"+user.getUsername()+".dat", user.getTbr());
+
+                // Show a success message
+                JOptionPane.showMessageDialog(dialog, "Added to TBR successfully!");
+            } catch (Exception ex) {
+                // Log any errors that occur during the process
+                System.err.println("Error adding book to TBR: " + ex.getMessage());
+                ex.printStackTrace();
+            }
         });
+
         
         JButton readNowButton = new JButton("Read Now");
         readNowButton.addActionListener(e -> {
@@ -331,25 +350,37 @@ debugLoadBooks();
         JButton preferencesButton = createButton("Preferences");
         preferencesButton.addActionListener(e -> openPreferencesUI());
         leftPanel.add(preferencesButton);
-
-        JButton readingGoalsButton = createButton("Reading Goals");
-        readingGoalsButton.addActionListener(e -> {
-            // Add reading goals functionality here
-        });
-        leftPanel.add(readingGoalsButton);
-
         JButton tbrButton = createButton("My TBR");
         tbrButton.addActionListener(e -> {
-            // Add TBR list functionality here
+            try {
+                // Read books from tbr.dat
+                List<Book> tbrList = readTBRFromFile("src/main/java/com/readiculousgoals/data/tbr"+user.getUsername()+".dat");
+        
+                // If TBR list is empty, show a message
+                if (tbrList.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Your TBR list is empty!", "My TBR", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
+        
+                // Create a string representation of books for display
+                StringBuilder tbrDisplay = new StringBuilder("Books in your TBR:\n");
+                for (int i = 0; i < tbrList.size(); i++) {
+                    Book book = tbrList.get(i);
+                    tbrDisplay.append((i + 1))
+                              .append(". Title: ").append(book.getTitle())
+                              .append(", Author: ").append(book.getAuthor())
+                              .append("\n");
+                }
+        
+                // Display the TBR list in a dialog
+                JOptionPane.showMessageDialog(this, tbrDisplay.toString(), "My TBR", JOptionPane.INFORMATION_MESSAGE);
+        
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error reading TBR: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
         });
+        
         leftPanel.add(tbrButton);
-
-        JButton settingsButton = createButton("Settings");
-        settingsButton.addActionListener(e -> {
-            // Add settings functionality here
-        });
-        leftPanel.add(settingsButton);
-
         JButton logoutButton = createButton("Logout");
         logoutButton.addActionListener(e -> {
             dispose(); // Close current window
@@ -553,6 +584,48 @@ debugLoadBooks();
             e.printStackTrace();
         }
     }
+    public void writeTBRToFile(String filePath, List<Book> tbrList) {
+        try {
+            // Ensure the parent directory exists
+            File file = new File(filePath);
+            File parentDir = file.getParentFile();
+            if (parentDir != null && !parentDir.exists()) {
+                if (parentDir.mkdirs()) {
+                    System.out.println("Created parent directory: " + parentDir.getAbsolutePath());
+                }
+            }
+    
+            // Write the TBR list to the file
+            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
+                oos.writeObject(tbrList);
+                System.out.println("TBR list successfully written to " + filePath);
+            }
+        } catch (IOException ex) {
+            System.err.println("Error writing TBR list to file: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+    public List<Book> readTBRFromFile(String filePath) {
+        List<Book> tbrList = new ArrayList<>();
+        File file = new File(filePath);
+    
+        // Check if the file exists
+        if (!file.exists()) {
+            System.out.println("TBR file not found: " + filePath);
+            return tbrList; // Return empty list
+        }
+    
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+            tbrList = (List<Book>) ois.readObject();
+            System.out.println("TBR list read successfully from file: " + filePath);
+        } catch (IOException | ClassNotFoundException ex) {
+            System.err.println("Error reading TBR file: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    
+        return tbrList;
+    }
+    
     
 
 }

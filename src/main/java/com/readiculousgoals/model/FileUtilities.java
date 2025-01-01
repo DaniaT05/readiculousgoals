@@ -6,11 +6,11 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 
 public class FileUtilities {
             // Method to get the number of pages from a PDF file
-            public static int getPdfTotalPages(String pdfFilePath) throws IOException {
-                try (PDDocument document = PDDocument.load(new File(pdfFilePath))) {
-                    return document.getNumberOfPages();  // Returns the total number of pages
-                }
-            }
+    public static int getPdfTotalPages(String pdfFilePath) throws IOException {
+        try (PDDocument document = PDDocument.load(new File(pdfFilePath))) {
+            return document.getNumberOfPages();  // Returns the total number of pages
+        }
+    }
     // Writes a serializable object to a file
     @SuppressWarnings("unchecked")
     public static <T extends Serializable> void writeObjectToFile(String filePath, T object) {

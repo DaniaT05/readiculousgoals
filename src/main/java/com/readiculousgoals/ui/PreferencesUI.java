@@ -6,6 +6,9 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+
 import com.readiculousgoals.model.*;
 import java.io.*;
 import java.util.List;
@@ -39,9 +42,13 @@ public class PreferencesUI {
         }
     
         JButton saveButton = new JButton("Save Preferences");
-        saveButton.setFont(new Font("Arial", Font.BOLD, 14));
-        saveButton.setBackground(Color.GREEN);
+        saveButton.setFont(new Font("Arial", Font.PLAIN, 14));
+        saveButton.setBackground(Color.decode("#7a4f29"));
         saveButton.setForeground(Color.WHITE);
+        saveButton.setBorder(new CompoundBorder(
+            new EmptyBorder(0, 0, 0, 0), 
+            BorderFactory.createMatteBorder(1, 1, 1, 1, Color.decode("#7a4f29"))
+        ));
     
         saveButton.addActionListener(new ActionListener() {
             @Override

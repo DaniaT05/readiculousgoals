@@ -4,14 +4,21 @@ import java.util.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.PDFRenderer;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.IOException;
+import java.awt.image.*;
 
 public class AdminControlsPage {
 
@@ -32,12 +39,12 @@ public class AdminControlsPage {
         frame.setLayout(null);
 
         // Buttons
-        JButton addBooksButton = new JButton("Add Books");
-        JButton deleteBooksButton = new JButton("Delete Books");
-        JButton updateBooksButton = new JButton("Update Books");
-        JButton viewBooksButton = new JButton("View Books");
+        JButton addBooksButton = new ButtonUI("Add Books");
+        JButton deleteBooksButton = new ButtonUI("Delete Books");
+        JButton updateBooksButton = new ButtonUI("Update Books");
+        JButton viewBooksButton = new ButtonUI("View Books");
         // JButton addChallengesButton = new JButton("Add Challenges");
-        JButton signOutButton = new JButton("Sign Out");
+        JButton signOutButton = new ButtonUI("Sign Out");
 
         // Button bounds
         addBooksButton.setBounds(120, 30, 150, 30);
@@ -75,18 +82,6 @@ public class AdminControlsPage {
                 openViewBooksDialog(frame);
             }
         });
-        // addChallengesButton.addActionListener(new ActionListener() {
-        //     @Override
-        //     public void actionPerformed(ActionEvent e) {
-        //         JOptionPane.showMessageDialog(frame, "Add Achievements dialog opened.");
-        //     }
-        // });
-        // addAchievementsButton.addActionListener(new ActionListener() {
-        //     @Override
-        //     public void actionPerformed(ActionEvent e) {
-        //         JOptionPane.showMessageDialog(frame, "Add Achievements dialog opened.");
-        //     }
-        // });
 
         signOutButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
@@ -107,89 +102,6 @@ public class AdminControlsPage {
     }
 
     private void openAddBooksDialog(JFrame frame) {
-        //     JDialog addBookDialog = new JDialog(frame, "Add Book", true);
-        //     addBookDialog.setSize(400, 500);
-        //     addBookDialog.setLayout(null);
-
-        //     // Form fields
-        //     JLabel titleLabel = new JLabel("Title:");
-        //     JTextField titleField = new JTextField();
-        //     JLabel authorLabel = new JLabel("Author:");
-        //     JTextField authorField = new JTextField();
-        //     JLabel genreLabel = new JLabel("Genre(s):");
-        //     JTextField genreField = new JTextField();
-        //     JLabel ageRatingLabel = new JLabel("Age Rating:");
-        //     JTextField ageRatingField = new JTextField();
-        //     JLabel pdfLabel = new JLabel("PDF File:");
-        //     JTextField pdfField = new JTextField();
-        //     JButton pdfBrowseButton = new JButton("Browse");
-        //     JLabel coverImageLabel = new JLabel("Cover Image:");
-        //     JTextField coverImageField = new JTextField();
-        //     JButton coverBrowseButton = new JButton("Browse");
-        //     JButton addButton = new JButton("Add to Library");
-        //     // Set bounds for form fields
-        //     titleLabel.setBounds(20, 20, 100, 25);
-        //     titleField.setBounds(150, 20, 200, 25);
-        //     authorLabel.setBounds(20, 60, 100, 25);
-        //     authorField.setBounds(150, 60, 200, 25);
-        //     genreLabel.setBounds(20, 100, 100, 25);
-        //     genreField.setBounds(150, 100, 200, 25);
-        //     ageRatingLabel.setBounds(20, 140, 100, 25);
-        //     ageRatingField.setBounds(150, 140, 200, 25);
-        //     pdfLabel.setBounds(20, 180, 100, 25);
-        //     pdfField.setBounds(150, 180, 150, 25);
-        //     pdfBrowseButton.setBounds(310, 180, 80, 25);
-        //     coverImageLabel.setBounds(20, 220, 100, 25);
-        //     coverImageField.setBounds(150, 220, 150, 25);
-        //     coverBrowseButton.setBounds(310, 220, 80, 25);
-        //     addButton.setBounds(120, 300, 150, 40);
-        //     // Add action listeners for file browsing
-        //     pdfBrowseButton.addActionListener(e -> browseFile(pdfField));
-        //     coverBrowseButton.addActionListener(e -> browseFile(coverImageField));
-        //     // Add action listener for "Add to Library" button
-        //     addButton.addActionListener(e -> {
-        //         // Get the entered details
-        //         String title = titleField.getText();
-        //         String author = authorField.getText();
-        //         String genre = genreField.getText();
-        //         String ageRating = ageRatingField.getText();
-        //         String pdfFilePath = pdfField.getText();
-        //         String coverImagePath = coverImageField.getText();
-        //         // Validate input
-        //         if (title.isEmpty() || author.isEmpty() || genre.isEmpty() || ageRating.isEmpty() || pdfFilePath.isEmpty() || coverImagePath.isEmpty()) {
-        //             JOptionPane.showMessageDialog(addBookDialog, "All fields must be filled out!", "Error", JOptionPane.ERROR_MESSAGE);
-        //             return;
-        //         }
-        //         // Handle book addition logic (e.g., using BookManager)
-        //         JOptionPane.showMessageDialog(addBookDialog, "Book added successfully!");
-        //         addBookDialog.dispose();
-        //     });
-        //     // Add components to dialog
-        //     addBookDialog.add(titleLabel);
-        //     addBookDialog.add(titleField);
-        //     addBookDialog.add(authorLabel);
-        //     addBookDialog.add(authorField);
-        //     addBookDialog.add(genreLabel);
-        //     addBookDialog.add(genreField);
-        //     addBookDialog.add(ageRatingLabel);
-        //     addBookDialog.add(ageRatingField);
-        //     addBookDialog.add(pdfLabel);
-        //     addBookDialog.add(pdfField);
-        //     addBookDialog.add(pdfBrowseButton);
-        //     addBookDialog.add(coverImageLabel);
-        //     addBookDialog.add(coverImageField);
-        //     addBookDialog.add(coverBrowseButton);
-        //     addBookDialog.add(addButton);
-        //     // Set dialog visibility
-        //     addBookDialog.setVisible(true);
-        // }
-        // private void browseFile(JTextField field) {
-        //     JFileChooser fileChooser = new JFileChooser();
-        //     int option = fileChooser.showOpenDialog(null);
-        //     if (option == JFileChooser.APPROVE_OPTION) {
-        //         field.setText(fileChooser.getSelectedFile().getAbsolutePath());
-        //     }
-        // }
         JDialog addBookDialog = new JDialog(frame, "Add Book", true);
         addBookDialog.setSize(400, 500);
         addBookDialog.setLayout(null);
@@ -206,10 +118,17 @@ public class AdminControlsPage {
         JLabel pdfLabel = new JLabel("PDF File:");
         JTextField pdfField = new JTextField();
         JButton pdfBrowseButton = new JButton("Browse");
+        pdfBrowseButton.setFont(new Font("Arial", Font.PLAIN, 14));
+        pdfBrowseButton.setBackground(Color.decode("#7a4f29"));
+        pdfBrowseButton.setForeground(Color.WHITE);
+        pdfBrowseButton.setBorder(new CompoundBorder(
+            new EmptyBorder(0, 0, 0, 0), 
+            BorderFactory.createMatteBorder(1, 1, 1, 1, Color.decode("#7a4f29"))
+        ));
         JLabel coverImageLabel = new JLabel("Cover Image:");
         JTextField coverImageField = new JTextField();
-        JButton coverBrowseButton = new JButton("Browse");
-        JButton addButton = new JButton("Add to Library");
+        JButton coverBrowseButton = new ButtonUI("Set");
+        JButton addButton = new ButtonUI("Add to Library");
 
         // Set bounds for form fields
         titleLabel.setBounds(20, 20, 100, 25);
@@ -237,15 +156,47 @@ public class AdminControlsPage {
             }
         });
 
-        coverBrowseButton.addActionListener(e1 -> {
-            JFileChooser fileChooser = new JFileChooser();
-            int option = fileChooser.showOpenDialog(addBookDialog);
-            if (option == JFileChooser.APPROVE_OPTION) {
-                coverImageField.setText(fileChooser.getSelectedFile().getAbsolutePath());
+        coverBrowseButton.addActionListener(e -> {
+            String pdfFilePath = pdfField.getText();
+            if (pdfFilePath.isEmpty()) {
+                JOptionPane.showMessageDialog(addBookDialog, "Please select a PDF file first.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        
+            try {
+                // Extract the first page as an image
+                Image coverImage = extractCoverFromPDF(pdfFilePath, 0); // 0 for the first page
+        
+                // Convert Image to BufferedImage
+                BufferedImage bufferedImage = new BufferedImage(
+                    coverImage.getWidth(null), 
+                    coverImage.getHeight(null), 
+                    BufferedImage.TYPE_INT_ARGB
+                );
+                Graphics2D g2d = bufferedImage.createGraphics();
+                g2d.drawImage(coverImage, 0, 0, null);
+                g2d.dispose();
+        
+                // Display the cover image in a dialog
+                ImageIcon coverIcon = new ImageIcon(bufferedImage);
+                coverImageField.setText("Cover Set from PDF");
+                JOptionPane.showMessageDialog(addBookDialog, coverIcon, "Cover Preview", JOptionPane.INFORMATION_MESSAGE);
+        
+                // Convert BufferedImage to byte array for saving
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ImageIO.write(bufferedImage, "png", baos);
+                byte[] coverImageContent = baos.toByteArray();
+        
+                // Pass it to your object creation logic or save it for later
+                // Example: Save coverImageContent to your class or call another method
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(addBookDialog, "Error extracting cover image: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
+        
 
-        addButton.addActionListener(e1 -> { 
+
+        addButton.addActionListener(e1 -> {
             try {
                 // Get the entered details
                 String title = titleField.getText();
@@ -253,10 +204,9 @@ public class AdminControlsPage {
                 String genre = genreField.getText();  // This will be a comma-separated string
                 String ageRating = ageRatingField.getText();
                 String pdfFilePath = pdfField.getText();
-                String coverImagePath = coverImageField.getText();
         
                 // Validate input
-                if (title.isEmpty() || author.isEmpty() || genre.isEmpty() || ageRating.isEmpty() || pdfFilePath.isEmpty() || coverImagePath.isEmpty()) {
+                if (title.isEmpty() || author.isEmpty() || genre.isEmpty() || ageRating.isEmpty() || pdfFilePath.isEmpty()) {
                     JOptionPane.showMessageDialog(addBookDialog, "All fields must be filled out!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
@@ -264,24 +214,33 @@ public class AdminControlsPage {
                 // Get total pages from PDF
                 int totalPages = FileUtilities.getPdfTotalPages(pdfFilePath);
         
-                // Convert PDF and image to byte arrays
+                // Convert PDF to byte array
                 byte[] pdfContent = FileUtilities.getFileContentAsBytes(pdfFilePath);
-                byte[] coverImageContent = FileUtilities.getFileContentAsBytes(coverImagePath);
-                System.out.println("pdfContent: "+pdfContent);
-                System.out.println("coverImageContent: "+coverImageContent);
         
-                // We don't need to split the genres into a list anymore, just pass the string
-                String genres = genre;  // Pass as is (comma-separated)
+                // Extract cover image from the first page of the PDF
+                byte[] coverImageContent;
+                try {
+                    Image coverImage = extractCoverFromPDF(pdfFilePath, 0); // Extract the first page
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    ImageIO.write((RenderedImage) coverImage, "png", baos); // Convert image to byte array
+                    coverImageContent = baos.toByteArray();
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(addBookDialog, "Error extracting cover image: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+        
+                // Log the byte array lengths (optional for debugging)
+                System.out.println("pdfContent length: " + pdfContent.length);
+                System.out.println("coverImageContent length: " + coverImageContent.length);
         
                 // Default values for 'status' and 'pagesRead'
                 String status = "Not Started";  // Example default status
                 int pagesRead = 0;  // Starting pages read
         
+                // Check for duplicate books
                 ArrayList<ReaderBook> books = FileUtilities.readAllObjects("src/main/java/com/readiculousgoals/data/books.dat", ReaderBook.class);
-        
-                // Check for duplicate book
                 boolean duplicateFound = false;
-                for (ReaderBook book : books) { // <-- Ensure 'books' is declared before this line
+                for (ReaderBook book : books) {
                     if (book.getTitle().equalsIgnoreCase(title) && book.getAuthor().equalsIgnoreCase(author)) {
                         duplicateFound = true;
                         break;
@@ -293,21 +252,12 @@ public class AdminControlsPage {
                     return;
                 }
         
-                // Create a new ReaderBook object with totalPages, status, pagesRead, and genres as a string
-                ReaderBook newBook = new ReaderBook(1, title, author, genres, totalPages, ageRating, status, pagesRead, pdfContent, coverImageContent);
-        
+                // Create a new ReaderBook object with extracted cover image
+                ReaderBook newBook = new ReaderBook(1, title, author, genre, totalPages, ageRating, status, pagesRead, pdfContent, coverImageContent);
                 System.out.println("New book: " + newBook);
-                ArrayList<ReaderBook> allbooks = FileUtilities.readAllObjects("src/main/java/com/readiculousgoals/data/books.dat", ReaderBook.class);
-
-                // ArrayList<ReaderBook> books = FileUtilities.readAllObjects("books.dat", ReaderBook.class);
-                if (allbooks.isEmpty()) {
-                    System.out.println("No books found. Starting fresh.");
-                }
-        
-                // Append the new book to the list
-                books.add(newBook);
         
                 // Save the new book to the file
+                books.add(newBook);
                 FileUtilities.writeObjectToFile("src/main/java/com/readiculousgoals/data/books.dat", newBook);
                 JOptionPane.showMessageDialog(addBookDialog, "Book added successfully!");
                 addBookDialog.dispose();
@@ -315,6 +265,7 @@ public class AdminControlsPage {
                 JOptionPane.showMessageDialog(addBookDialog, "Error adding book: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
+        
         
         
 
@@ -349,8 +300,8 @@ public class AdminControlsPage {
         JLabel authorNameLabel = new JLabel("Author Name:");
         JTextField authorNameField = new JTextField(20);
 
-        JButton deleteButton = new JButton("Delete");
-        JButton cancelButton = new JButton("Cancel");
+        JButton deleteButton = new ButtonUI("Delete");
+        JButton cancelButton = new ButtonUI("Cancel");
 
         deleteDialog.add(bookNameLabel);
         deleteDialog.add(bookNameField);
@@ -441,14 +392,20 @@ public class AdminControlsPage {
         JTextField searchField = new JTextField();
         JComboBox<String> searchCriteriaDropdown = new JComboBox<>(new String[]{"Title", "Author", "Age Rating"});
         JButton searchButton = new JButton("Search");
-
+        searchButton.setFont(new Font("Arial", Font.PLAIN, 12));
+        searchButton.setBackground(Color.decode("#7a4f29"));
+        searchButton.setForeground(Color.WHITE);
+        searchButton.setBorder(new CompoundBorder(
+            new EmptyBorder(0, 0, 0, 0), 
+            BorderFactory.createMatteBorder(1, 1, 1, 1, Color.decode("#7a4f29"))
+        ));
         // Components for view by genre functionality
         JLabel viewByLabel = new JLabel("View by:");
         String[] genres = {"All", "Fiction", "Non-Fiction", "Romance", "Thriller", "Fantasy", "Crime",
             "Classics", "Educational", "History", "Horror", "Mystery", "Religion",
             "Science", "Sci-Fi", "Self-Help", "Biography"};
         JComboBox<String> genreDropdown = new JComboBox<>(genres);
-        JButton viewButton = new JButton("View");
+        JButton viewButton = new ButtonUI("View");
 
         // Set bounds
         searchRadioButton.setBounds(20, 20, 120, 25);
@@ -464,51 +421,66 @@ public class AdminControlsPage {
         viewButton.setBounds(290, 100, 80, 25);
 
         // Add action listeners for radio buttons
-        searchRadioButton.addActionListener(event -> {
-            searchField.setEnabled(true);
-            searchCriteriaDropdown.setEnabled(true);
-            searchButton.setEnabled(true);
-            genreDropdown.setEnabled(false);
-            viewButton.setEnabled(false);
-        });
+        // Action listener for the search radio button
+searchRadioButton.addActionListener(event -> {
+    searchField.setEnabled(true); // Enable the search field
+    searchCriteriaDropdown.setEnabled(true); // Enable the criteria dropdown
+    searchButton.setEnabled(true); // Enable the search button
+    genreDropdown.setEnabled(false); // Disable the genre dropdown
+    viewButton.setEnabled(false); // Disable the view button
+});
 
-        genreRadioButton.addActionListener(event -> {
-            searchField.setEnabled(false);
-            searchCriteriaDropdown.setEnabled(false);
-            searchButton.setEnabled(false);
-            genreDropdown.setEnabled(true);
-            viewButton.setEnabled(true);
-        });
+// Action listener for the genre radio button
+genreRadioButton.addActionListener(event -> {
+    searchField.setEnabled(false); // Disable the search field
+    searchCriteriaDropdown.setEnabled(false); // Disable the criteria dropdown
+    searchButton.setEnabled(false); // Disable the search button
+    genreDropdown.setEnabled(true); // Enable the genre dropdown
+    viewButton.setEnabled(true); // Enable the view button
+});
 
-        // Add action listener for the "Search" button
-        searchButton.addActionListener(event -> {
-            String criteria = (String) searchCriteriaDropdown.getSelectedItem();
-            String query = searchField.getText().trim().toLowerCase();
+// Add action listener for the "Search" button
+searchButton.addActionListener(event -> {
+    String criteria = (String) searchCriteriaDropdown.getSelectedItem();
+    String query = searchField.getText().trim().toLowerCase();
 
-            if (query.isEmpty()) {
-                JOptionPane.showMessageDialog(viewBooksDialog, "Please enter a search term.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+    if (query.isEmpty()) {
+        JOptionPane.showMessageDialog(viewBooksDialog, "Please enter a search term.", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
 
-            StringBuilder results = new StringBuilder();
-            for (ReaderBook book : books) {
-                if (criteria.equals("Title") && book.getTitle().toLowerCase().contains(query)
-                        || criteria.equals("Author") && book.getAuthor().toLowerCase().contains(query)
-                        || criteria.equals("Age Rating") && book.getAgeRating().toLowerCase().contains(query)) {
-                    results.append("Title: ").append(book.getTitle())
-                            .append("\nAuthor: ").append(book.getAuthor())
-                            .append("\nGenres: ").append(String.join(", ", book.getGenres()))
-                            .append("\nAge Rating: ").append(book.getAgeRating())
-                            .append("\n------------------------\n");
-                }
-            }
+    StringBuilder results = new StringBuilder();
+    for (ReaderBook book : books) {
+        if (criteria.equals("Title") && book.getTitle().toLowerCase().contains(query)
+                || criteria.equals("Author") && book.getAuthor().toLowerCase().contains(query)
+                || criteria.equals("Age Rating") && book.getAgeRating().toLowerCase().contains(query)) {
+            results.append("Title: ").append(book.getTitle())
+                    .append("\nAuthor: ").append(book.getAuthor())
+                    .append("\nGenres: ").append(String.join(", ", book.getGenres()))
+                    .append("\nAge Rating: ").append(book.getAgeRating())
+                    .append("\n------------------------\n");
+        }
+    }
 
-            if (results.length() == 0) {
-                JOptionPane.showMessageDialog(viewBooksDialog, "No books found.", "Info", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(viewBooksDialog, results.toString(), "Search Results", JOptionPane.INFORMATION_MESSAGE);
-            }
-        });
+    if (results.length() == 0) {
+        JOptionPane.showMessageDialog(viewBooksDialog, "No books found.", "Info", JOptionPane.INFORMATION_MESSAGE);
+    } else {
+        // Create a JTextArea to hold the results
+        JTextArea textArea = new JTextArea(results.toString());
+        textArea.setEditable(false); // Make it non-editable
+        textArea.setLineWrap(true); // Enable line wrapping
+        textArea.setWrapStyleWord(true);
+
+        // Add the text area to a JScrollPane for vertical scrolling
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); // Always show vertical scrollbar
+        scrollPane.setPreferredSize(new Dimension(400, 100)); // Set preferred size for the scrollable pane
+
+        // Show the results in the scrollable dialog
+        JOptionPane.showMessageDialog(viewBooksDialog, scrollPane, "Search Results", JOptionPane.INFORMATION_MESSAGE);
+    }
+});
+
 
         // Add action listener for the "View" button
         viewButton.addActionListener(event -> {
@@ -537,7 +509,6 @@ public class AdminControlsPage {
         searchField.setEnabled(false);
         searchCriteriaDropdown.setEnabled(false);
         searchButton.setEnabled(false);
-
         // Add components to the dialog
         viewBooksDialog.add(searchRadioButton);
         viewBooksDialog.add(genreRadioButton);
@@ -553,185 +524,207 @@ public class AdminControlsPage {
         viewBooksDialog.setVisible(true);
     }
 
-            private void openUpdateBooksDialog(JFrame frame){
-                ArrayList<ReaderBook> books = FileUtilities.readAllObjects("src/main/java/com/readiculousgoals/data/books.dat", ReaderBook.class);
-                // Create dialog for updating books
-                JDialog updateBooksDialog = new JDialog(frame, "Update Books", true);
-                updateBooksDialog.setSize(600, 400);
-                updateBooksDialog.setLayout(new BorderLayout());
-                // Panel for displaying books
-                JPanel booksPanel = new JPanel();
-                booksPanel.setLayout(new BoxLayout(booksPanel, BoxLayout.Y_AXIS));
-                if (books.isEmpty()) {
-                    JOptionPane.showMessageDialog(frame, "No books found.", "Info", JOptionPane.INFORMATION_MESSAGE);
+    private void openUpdateBooksDialog(JFrame frame){
+        ArrayList<ReaderBook> books = FileUtilities.readAllObjects("src/main/java/com/readiculousgoals/data/books.dat", ReaderBook.class);
+        // Create dialog for updating books
+        JDialog updateBooksDialog = new JDialog(frame, "Update Books", true);
+        updateBooksDialog.setSize(600, 400);
+        updateBooksDialog.setLayout(new BorderLayout());
+        // Panel for displaying books
+        JPanel booksPanel = new JPanel();
+        booksPanel.setLayout(new BoxLayout(booksPanel, BoxLayout.Y_AXIS));
+        if (books.isEmpty()) {
+            JOptionPane.showMessageDialog(frame, "No books found.", "Info", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        for (final ReaderBook book : books) {  // Made 'book' final for use in inner class
+            // Panel for each book
+            JPanel bookPanel = new JPanel(new BorderLayout());
+            bookPanel.setBorder(BorderFactory.createTitledBorder("Book Details"));
+            // Book details
+            JTextArea bookDetails = new JTextArea();
+            bookDetails.setEditable(false);
+            bookDetails.setText("Title: " + book.getTitle() + "\n"
+                    + "Author: " + book.getAuthor() + "\n"
+                    + "Genres: " + String.join(", ", book.getGenres()) + "\n"
+                    + "Age Rating: " + book.getAgeRating());
+            // Button for updating
+            JButton updateButton = new ButtonUI("Update");
+            updateButton.addActionListener(updateEvent -> {
+                // Create a dialog for updating the book
+                JDialog updateBookDialog = new JDialog(updateBooksDialog, "Update Book", true);
+                updateBookDialog.setSize(500, 400);
+                updateBookDialog.setLayout(null);
+                // Labels and fields for book details
+                JLabel titleLabel = new JLabel("Title:");
+                JTextField titleField = new JTextField(book.getTitle());
+                JLabel authorLabel = new JLabel("Author:");
+                JTextField authorField = new JTextField(book.getAuthor());
+                JLabel genreLabel = new JLabel("Genres (comma-separated):");
+                JTextField genreField = new JTextField(String.join(", ", book.getGenres()));
+                JLabel ageRatingLabel = new JLabel("Age Rating:");
+                JTextField ageRatingField = new JTextField(book.getAgeRating());
+                JButton confirmButton = new ButtonUI("Confirm");
+                
+                JButton cancelButton = new ButtonUI("Cancel");
+                // Set bounds for components
+                titleLabel.setBounds(20, 20, 150, 25);
+                titleField.setBounds(180, 20, 280, 25);
+                authorLabel.setBounds(20, 60, 150, 25);
+                authorField.setBounds(180, 60, 280, 25);
+                genreLabel.setBounds(20, 100, 150, 25);
+                genreField.setBounds(180, 100, 280, 25);
+                ageRatingLabel.setBounds(20, 140, 150, 25);
+                ageRatingField.setBounds(180, 140, 280, 25);
+                confirmButton.setBounds(100, 300, 120, 30);
+                cancelButton.setBounds(280, 300, 120, 30);
+                // Add components to the dialog
+                updateBookDialog.add(titleLabel);
+                updateBookDialog.add(titleField);
+                updateBookDialog.add(authorLabel);
+                updateBookDialog.add(authorField);
+                updateBookDialog.add(genreLabel);
+                updateBookDialog.add(genreField);
+                updateBookDialog.add(ageRatingLabel);
+                updateBookDialog.add(ageRatingField);
+                updateBookDialog.add(confirmButton);
+                updateBookDialog.add(cancelButton);
+
+        // Add functionality for Confirm button
+        confirmButton.addActionListener(confirmEvent -> {
+            try {
+                String updatedTitle = titleField.getText();
+                String updatedAuthor = authorField.getText();
+                String updatedGenre = genreField.getText();  // Genres as a comma-separated string
+                String updatedAgeRating = ageRatingField.getText();
+        
+                if (updatedTitle.isEmpty() || updatedAuthor.isEmpty() || updatedGenre.isEmpty() || updatedAgeRating.isEmpty()) {
+                    JOptionPane.showMessageDialog(updateBookDialog, "All fields must be filled out!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                for (final ReaderBook book : books) {  // Made 'book' final for use in inner class
-                    // Panel for each book
-                    JPanel bookPanel = new JPanel(new BorderLayout());
-                    bookPanel.setBorder(BorderFactory.createTitledBorder("Book Details"));
-                    // Book details
-                    JTextArea bookDetails = new JTextArea();
-                    bookDetails.setEditable(false);
-                    bookDetails.setText("Title: " + book.getTitle() + "\n"
-                            + "Author: " + book.getAuthor() + "\n"
-                            + "Genres: " + String.join(", ", book.getGenres()) + "\n"
-                            + "Age Rating: " + book.getAgeRating());
-                    // Button for updating
-                    JButton updateButton = new JButton("Update");
-                    updateButton.addActionListener(updateEvent -> {
-                        // Create a dialog for updating the book
-                        JDialog updateBookDialog = new JDialog(updateBooksDialog, "Update Book", true);
-                        updateBookDialog.setSize(500, 400);
-                        updateBookDialog.setLayout(null);
-                        // Labels and fields for book details
-                        JLabel titleLabel = new JLabel("Title:");
-                        JTextField titleField = new JTextField(book.getTitle());
-                        JLabel authorLabel = new JLabel("Author:");
-                        JTextField authorField = new JTextField(book.getAuthor());
-                        JLabel genreLabel = new JLabel("Genres (comma-separated):");
-                        JTextField genreField = new JTextField(String.join(", ", book.getGenres()));
-                        JLabel ageRatingLabel = new JLabel("Age Rating:");
-                        JTextField ageRatingField = new JTextField(book.getAgeRating());
-                        JButton confirmButton = new JButton("Confirm");
-                        JButton cancelButton = new JButton("Cancel");
-                        // Set bounds for components
-                        titleLabel.setBounds(20, 20, 150, 25);
-                        titleField.setBounds(180, 20, 280, 25);
-                        authorLabel.setBounds(20, 60, 150, 25);
-                        authorField.setBounds(180, 60, 280, 25);
-                        genreLabel.setBounds(20, 100, 150, 25);
-                        genreField.setBounds(180, 100, 280, 25);
-                        ageRatingLabel.setBounds(20, 140, 150, 25);
-                        ageRatingField.setBounds(180, 140, 280, 25);
-                        confirmButton.setBounds(100, 300, 120, 30);
-                        cancelButton.setBounds(280, 300, 120, 30);
-                        // Add components to the dialog
-                        updateBookDialog.add(titleLabel);
-                        updateBookDialog.add(titleField);
-                        updateBookDialog.add(authorLabel);
-                        updateBookDialog.add(authorField);
-                        updateBookDialog.add(genreLabel);
-                        updateBookDialog.add(genreField);
-                        updateBookDialog.add(ageRatingLabel);
-                        updateBookDialog.add(ageRatingField);
-                        updateBookDialog.add(confirmButton);
-                        updateBookDialog.add(cancelButton);
-
-                // Add functionality for Confirm button
-                confirmButton.addActionListener(confirmEvent -> {
-                    try {
-                        String updatedTitle = titleField.getText();
-                        String updatedAuthor = authorField.getText();
-                        String updatedGenre = genreField.getText();  // Genres as a comma-separated string
-                        String updatedAgeRating = ageRatingField.getText();
-                
-                        if (updatedTitle.isEmpty() || updatedAuthor.isEmpty() || updatedGenre.isEmpty() || updatedAgeRating.isEmpty()) {
-                            JOptionPane.showMessageDialog(updateBookDialog, "All fields must be filled out!", "Error", JOptionPane.ERROR_MESSAGE);
-                            return;
-                        }
-                
-                        // Check for duplicate books, excluding the current book being updated
-                        for (ReaderBook existingBook : books) {
-                            if (existingBook != book
-                                    && existingBook.getTitle().equalsIgnoreCase(updatedTitle)
-                                    && existingBook.getAuthor().equalsIgnoreCase(updatedAuthor)) {
-                                JOptionPane.showMessageDialog(updateBookDialog, "A book with the same title and author already exists.", "Error", JOptionPane.ERROR_MESSAGE);
-                                return;
-                            }
-                        }
-                
-                        // Find the exact book in the list and update it
-                        int bookIndex = -1;
-                        for (int i = 0; i < books.size(); i++) {
-                            if (books.get(i) == book) { // Compare references instead of equals()
-                                bookIndex = i;
-                                break;
-                            }
-                        }
-                
-                        if (bookIndex != -1) {
-                            // Create a new book object with updated values
-                            ReaderBook updatedBook = new ReaderBook(
-                                    book.getBookId(),
-                                    updatedTitle,
-                                    updatedAuthor,
-                                    updatedGenre,  // Pass the genres string as it is
-                                    book.getTotalReaderPages(),
-                                    updatedAgeRating,
-                                    book.getStatus(),  // Preserving current status
-                                    book.getPagesRead(),  // Preserving current pagesRead
-                                    book.getPdfContent(),
-                                    book.getCoverImage()
-                            );
-                
-                            // Replace the old book with the updated one
-                            books.set(bookIndex, updatedBook);
-                
-                            // Write all books back to file
-                            FileUtilities.writeAllObjects("src/main/java/com/readiculousgoals/data/books.dat", books);
-                
-                            JOptionPane.showMessageDialog(updateBookDialog, "Book updated successfully!");
-                            updateBookDialog.dispose();
-                            updateBooksDialog.dispose(); // Close the main dialog to refresh the view
-                        } else {
-                            JOptionPane.showMessageDialog(updateBookDialog, "Error: Book not found in list", "Error", JOptionPane.ERROR_MESSAGE);
-                        }
-                    } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(updateBookDialog, "Error updating book: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        
+                // Check for duplicate books, excluding the current book being updated
+                for (ReaderBook existingBook : books) {
+                    if (existingBook != book
+                            && existingBook.getTitle().equalsIgnoreCase(updatedTitle)
+                            && existingBook.getAuthor().equalsIgnoreCase(updatedAuthor)) {
+                        JOptionPane.showMessageDialog(updateBookDialog, "A book with the same title and author already exists.", "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
                     }
-                });                
-
-                        // Add functionality for Cancel button
-                        cancelButton.addActionListener(cancelEvent -> updateBookDialog.dispose());
-                        // Set dialog visibility
-                        updateBookDialog.setVisible(true);
-                    });
-                    // Add components to the book panel
-                    bookPanel.add(bookDetails, BorderLayout.CENTER);
-                    bookPanel.add(updateButton, BorderLayout.EAST);
-                    // Add book panel to the main books panel
-                    booksPanel.add(bookPanel);
                 }
-                // Add the books panel to a scroll pane
-                JScrollPane scrollPane = new JScrollPane(booksPanel);
-                updateBooksDialog.add(scrollPane, BorderLayout.CENTER);
+        
+                // Find the exact book in the list and update it
+                int bookIndex = -1;
+                for (int i = 0; i < books.size(); i++) {
+                    if (books.get(i) == book) { // Compare references instead of equals()
+                        bookIndex = i;
+                        break;
+                    }
+                }
+        
+                if (bookIndex != -1) {
+                    // Create a new book object with updated values
+                    ReaderBook updatedBook = new ReaderBook(
+                            book.getBookId(),
+                            updatedTitle,
+                            updatedAuthor,
+                            updatedGenre,  // Pass the genres string as it is
+                            book.getTotalReaderPages(),
+                            updatedAgeRating,
+                            book.getStatus(),  // Preserving current status
+                            book.getPagesRead(),  // Preserving current pagesRead
+                            book.getPdfContent(),
+                            book.getCoverImage()
+                    );
+        
+                    // Replace the old book with the updated one
+                    books.set(bookIndex, updatedBook);
+        
+                    // Write all books back to file
+                    FileUtilities.writeAllObjects("src/main/java/com/readiculousgoals/data/books.dat", books);
+        
+                    JOptionPane.showMessageDialog(updateBookDialog, "Book updated successfully!");
+                    updateBookDialog.dispose();
+                    updateBooksDialog.dispose(); // Close the main dialog to refresh the view
+                } else {
+                    JOptionPane.showMessageDialog(updateBookDialog, "Error: Book not found in list", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(updateBookDialog, "Error updating book: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+                // Add functionality for Cancel button
+                cancelButton.addActionListener(cancelEvent -> updateBookDialog.dispose());
                 // Set dialog visibility
-                updateBooksDialog.setVisible(true);
-            }
+                updateBookDialog.setVisible(true);
+            });
+            // Add components to the book panel
+            bookPanel.add(bookDetails, BorderLayout.CENTER);
+            bookPanel.add(updateButton, BorderLayout.EAST);
+            // Add book panel to the main books panel
+            booksPanel.add(bookPanel);
+        }
+        // Add the books panel to a scroll pane
+        JScrollPane scrollPane = new JScrollPane(booksPanel);
+        updateBooksDialog.add(scrollPane, BorderLayout.CENTER);
+        // Set dialog visibility
+        updateBooksDialog.setVisible(true);
+    }
+    private Image extractCoverFromPDF(String pdfFilePath, int pageNum) throws IOException {
+        try (PDDocument document = PDDocument.load(new File(pdfFilePath))) {
+            PDFRenderer pdfRenderer = new PDFRenderer(document);
+            BufferedImage bufferedImage = pdfRenderer.renderImage(pageNum);
+            return bufferedImage;
+        }
+    }
+    
 
-            private void openSignOutDialogBox(JFrame frame) {
-                // Create a confirmation dialog
-                JDialog signOutDialog = new JDialog(frame, "Confirm Sign Out", true);
-                signOutDialog.setSize(300, 150);
-                signOutDialog.setLayout(null);
-            
-                // Label for confirmation
-                JLabel confirmLabel = new JLabel("Are you sure you want to sign out?");
-                confirmLabel.setBounds(40, 20, 220, 25);
-                signOutDialog.add(confirmLabel);
-            
-                // "Yes" and "No" buttons
-                JButton yesButton = new JButton("Yes");
-                JButton noButton = new JButton("No");
-            
-                yesButton.setBounds(60, 70, 80, 30);
-                noButton.setBounds(160, 70, 80, 30);
-            
-                signOutDialog.add(yesButton);
-                signOutDialog.add(noButton);
-            
-                // Action for "Yes" button
-                yesButton.addActionListener(yesEvent -> {
-                    signOutDialog.dispose(); // Close the dialog
-                    frame.dispose(); // Close the admin's control page
-                    new LoginPage(); // Display the login page (assuming the method exists in another class)
-                });
-            
-                // Action for "No" button
-                noButton.addActionListener(noEvent -> signOutDialog.dispose());
-            
-                // Show the dialog
-                signOutDialog.setVisible(true);
-            }
+    private void openSignOutDialogBox(JFrame frame) {
+        // Create a confirmation dialog
+        JDialog signOutDialog = new JDialog(frame, "Confirm Sign Out", true);
+        signOutDialog.setSize(300, 150);
+        signOutDialog.setLayout(null);
+        // Label for confirmation
+        JLabel confirmLabel = new JLabel("Are you sure you want to sign out?");
+        confirmLabel.setBounds(40, 20, 220, 25);
+        signOutDialog.add(confirmLabel);
+        // "Yes" and "No" buttons
+        JButton yesButton = new ButtonUI("Yes");
+        JButton noButton = new ButtonUI("No");
+        yesButton.setBounds(60, 70, 80, 30);
+        noButton.setBounds(160, 70, 80, 30);
+        signOutDialog.add(yesButton);
+        signOutDialog.add(noButton);
+        // Action for "Yes" button
+        yesButton.addActionListener(yesEvent -> {
+            signOutDialog.dispose(); // Close the dialog
+            frame.dispose(); // Close the admin's control page
+            new LoginPage(); // Display the login page (assuming the method exists in another class)
+        });
+        // Action for "No" button
+        noButton.addActionListener(noEvent -> signOutDialog.dispose());
+        // Show the dialog
+        signOutDialog.setVisible(true);
+    }
+    private byte[] saveCoverImageContent(String pdfFilePath) throws IOException {
+        Image coverImage = extractCoverFromPDF(pdfFilePath, 0); // Extract the first page
+    
+        // Convert Image to BufferedImage
+        BufferedImage bufferedImage = new BufferedImage(
+            coverImage.getWidth(null), 
+            coverImage.getHeight(null), 
+            BufferedImage.TYPE_INT_ARGB
+        );
+        Graphics2D g2d = bufferedImage.createGraphics();
+        g2d.drawImage(coverImage, 0, 0, null);
+        g2d.dispose();
+    
+        // Convert BufferedImage to byte array
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(bufferedImage, "png", baos); 
+        return baos.toByteArray();
+    }
+    
+    
+    
 }
